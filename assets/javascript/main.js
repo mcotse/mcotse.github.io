@@ -1,6 +1,4 @@
 var height = $(window).height();
-console.log(height);
-
 (function () {
     $(window).scroll(function () {
         var oVal;
