@@ -12,6 +12,13 @@ h1 {
   font-size: 3.4em;
   margin-bottom: 0.2em; }
 
+.big-slash {
+  font-size: 4em;
+  font-weight: 200; }
+
+.menu .text-middle {
+  vertical-align: 100%; }
+
 header p {
   font-size: 1.5em;
   margin-bottom: 0.7em; }
