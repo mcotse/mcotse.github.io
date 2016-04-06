@@ -1,0 +1,47 @@
+header p
+  font-size: 1.5em
+  margin-bottom: 0.7em
+
+header > div
+  max-width: 400px
+  margin: 0 auto
+  padding-top: 30%
+  height: 380px
+  text-align: center
+  color: White
+
+header
+  z-index: 1
+  position: absolute
+  top: 0
+  width: 100%
+  padding: 0px 0px 0px 0px
+  font-family: Raleway
+
+.header-background
+  background: -webkit-linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),url('../images/bg.png')
+  background: -o-linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),url('../images/bg.png')
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),url('../images/bg.png')
+
+.blurImg
+  position: relative
+  width: 100%
+  height: 600px
+  z-index: -1
+  top: 0
+  left: 0
+
+.blurImg > div
+  position: fixed
+  width: 100%
+  height: 600px
+  background-repeat: no-repeat
+  -webkit-background-size: cover
+  -moz-background-size: cover
+  background-size: cover
+  background-position: right bottom
+
+.blur
+  opacity: 0
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"
+  filter: alpha(opacity=0)
