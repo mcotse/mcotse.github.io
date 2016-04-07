@@ -39,10 +39,13 @@ header {
   padding: 0px 0px 0px 0px;
   font-family: Raleway; }
 
-.header-background {
-  background: -webkit-linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../images/bg.png");
-  background: -o-linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../images/bg.png");
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../images/bg.png"); }
+.header-bg {
+  background: -webkit-linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../images/bg.svg");
+  background: -o-linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../images/bg.svg");
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../images/bg.svg"); }
+
+.header-bg-blur {
+  background: -webkit-linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)); }
 
 .blurImg {
   position: relative;
@@ -107,8 +110,11 @@ header {
 .bg-navy {
   background-color: #001F3F; }
 
+.bg-darknavy {
+  background-color: #001b48; }
+
 .bg-blue {
-  background-color: #0074D9; }
+  background-color: #46AAD9; }
 
 .bg-aqua {
   background-color: #7FDBFF; }
