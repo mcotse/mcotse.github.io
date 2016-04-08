@@ -30,7 +30,7 @@ color: black;
 
 }
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
-color: #22F;
+color: $accent-purple;
 
 }
 ul.nav {
@@ -41,7 +41,7 @@ ul.nav {
   ********************************** */
 .small-logo-container {
     padding-top: $navbar-height;
-    height: $navbar-height;
+    height: $navbar-height ;
     overflow: hidden;
     position: absolute;
   }
@@ -56,7 +56,7 @@ ul.nav {
            Big Logo
   ********************************** */
 .big-logo-row {
-  background: gold;
+  background: $primary-color;
 
   .big-logo-container {
     padding-top: $navbar-height;

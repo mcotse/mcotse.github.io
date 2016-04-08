@@ -350,34 +350,34 @@ h1 {
   font-size: 3.4em;
   margin-bottom: 0.2em; }
 
-#intro {
-  background: url(../images/bg.svg) no-repeat center center fixed;
+#about, #contact {
   height: auto;
   margin: 0 auto;
   width: 100%;
   position: relative;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
   background-size: auto;
-  padding: 100px 0; }
-
-#home {
-  background: url(../images/bg.svg) 50% 0 fixed;
-  height: auto;
-  margin: 0 auto;
-  width: 100%;
-  position: relative;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-  padding: 200px 0; }
-
-#about {
-  background: url(../images/bg.svg) 50% 0 fixed;
-  height: auto;
-  margin: 0 auto;
-  width: 100%;
-  position: relative;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
   padding: 100px 0;
-  color: #fff; }
+  background: url("../images/intro.png") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
+
+#portfolio {
+  height: auto;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+  background-size: auto;
+  padding: 100px 0;
+  background: url("../images/bigbg.png") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  padding: 200px 0; }
 
 header p {
   font-size: 1.5em;
@@ -457,7 +457,7 @@ header {
   color: black; }
 
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
-  color: #22F; }
+  color: #9A74CE; }
 
 /* *********************************
            Toolbar Logo
@@ -477,7 +477,7 @@ header {
            Big Logo
   ********************************** */
 .big-logo-row {
-  background: gold; }
+  background: #46AAD9; }
   .big-logo-row .big-logo-container {
     padding-top: 50px; }
   .big-logo-row h1 {
