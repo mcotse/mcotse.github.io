@@ -8,7 +8,7 @@ $(window).scroll(function() {
 
   var smallLogoEndPos = 0;
   var smallSpeed = (smallLogoHeight / bigLogoHeight);
-  
+
   var ySmall = ($(window).scrollTop() * smallSpeed);
 
   var smallPadding = navbarHeight - ySmall;
