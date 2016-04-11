@@ -19,7 +19,8 @@
   width: 100%
   // top: 0%
 .headroom
-  height: 70px
+  text-align: center
+  height: 65px
   position: fixed
   z-index: 10
   right: 0
@@ -29,6 +30,7 @@
   padding-left: 4%
   padding-right: 4%
   transition: all .25s ease-in-out
+  opacity: 0.8
   backface-visibility: hidden
   z-index: 100
   *zoom: 1
@@ -39,37 +41,23 @@
   &:after
     clear: both
 
+  .big-slash
+    font-size: 4em
+    font-weight: 200
+    font-family: Times New Roman
 
-  h1
-    color: #eee
-    font-size: 26px
-    font-family: 'Open Sans', sans-serif
-    font-weight: 700
-    float: left
-    display: inline-block
-    width: auto
-    position: relative
-    top: 50%
-    transform: translateY(-50%)
-    margin-top: -2px
+  .container
 
+    height: 70px
 
-  nav
-    float: right
-    display: inline-block
-    width: auto
-    font-family: 'Open Sans', sans-serif
-    font-size: 20px
-    position: relative
-    top: 50%
-    transform: translateY(-50%)
-    margin-top: -2px
-
-    a
-      color: #00c1bb
-      text-decoration: none
-
-
+  span
+    color: #748185
+    vertical-align: middle
+  a
+    font-size: 0.8em
+    color: #FFFFFF
+    text-decoration: none
+    vertical-align: middle
 
   &--pinned
     transform: translateY(0%)
