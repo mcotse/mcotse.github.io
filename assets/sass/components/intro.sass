@@ -3,7 +3,7 @@
   margin: 0 auto
   width: 100%
   position: relative
-  box-shadow: 0 0 50px rgba(0,0,0,0.8)
+  // box-shadow: 0 0 20px rgba(0,0,0,0.8)
   background-size: auto
   padding: 100px 0
   background: url($bg) no-repeat center center fixed
@@ -12,7 +12,10 @@
   -o-background-size: cover
   background-size: cover
 
-#about, #contact
+#about
+  +section-style("../images/intro.png")
+  margin-top: 65px
+#contact
   +section-style("../images/intro.png")
 #portfolio
   +section-style("../images/bigbg.png")
