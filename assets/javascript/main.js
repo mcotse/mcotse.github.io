@@ -19,12 +19,12 @@
 //   }
 // });
 // grab an element
-var myElement = document.querySelector("header");
-// construct an instance of Headroom, passing the element
-var headroom  = new Headroom(myElement);
-// initialise
+var Header = document.querySelector('header');
+var headroom = new Headroom(Header, {
+  "offset": 205,
+  "tolerance": 5
+});
 headroom.init();
-
 
 $(document).ready(function(){
    // cache the window object
