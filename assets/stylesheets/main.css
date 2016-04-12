@@ -333,12 +333,6 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-* {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin: 0; }
-
 body {
   font-family: Raleway; }
 
@@ -352,6 +346,13 @@ h1 {
   position: relative;
   display: inline-block;
   margin: 0 0 0 0; }
+
+.clear {
+  clear: both;
+  height: 1px;
+  overflow: hidden;
+  font-size: 0;
+  margin-top: -1px; }
 
 #intro {
   background: url("../images/bg.png") no-repeat center center;
@@ -369,12 +370,12 @@ h1 {
 #contact {
   background-color: #AAAAAA; }
 
-.about-title, .about-content {
-  height: 100vp;
-  width: 50%; }
-.about-title {
+.about-title, .about-content, .work-title, .work-content, .contact-title, .contact-content {
+  width: 49vp;
+  margin: 0 0 0 0; }
+.about-title, .work-title, .contact-title {
   float: left; }
-.about-content {
+.about-content, .work-content, .contact-content {
   float: right;
   background-color: white; }
 
