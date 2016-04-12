@@ -1,22 +1,31 @@
-=section-style($bg)
-  height: auto
-  margin: 0 auto
+=section-style
+  min-height: 100vh
   width: 100%
   position: relative
-  // box-shadow: 0 0 20px rgba(0,0,0,0.8)
-  background-size: auto
-  padding: 100px 0
-  background: url($bg) no-repeat center center fixed
+  margin: 0
+  padding: 0
+  display: inline-block
+
+=pic-bg($bg)
+  background: url($bg) no-repeat center center
   -webkit-background-size: cover
   -moz-background-size: cover
   -o-background-size: cover
   background-size: cover
 
+=solid-bg($color)
+  background-color: $color
+
+#intro
+  +section-style
+  +pic-bg("../images/bigbg.png")
+  padding-top: 65px
 #about
-  +section-style("../images/intro.png")
-  margin-top: 65px
+  +section-style
+  +solid-bg($primary-color)
 #contact
-  +section-style("../images/intro.png")
-#portfolio
-  +section-style("../images/bigbg.png")
-  padding: 200px 0
+  +section-style
+  +solid-bg($grey)
+#work
+  +section-style
+  +solid-bg($accent-orange)
