@@ -9,15 +9,20 @@
   background-color: $color
 
 #intro
-  // +section-style
   +pic-bg("../images/bg.png")
-
 #about
-  // +section-style
-  +solid-bg($primary-color)
-#contact
-  // +section-style
-  +solid-bg($grey)
+  background-color: $primary-color
 #work
-  // +section-style
-  +solid-bg($accent-orange)
+  background-color: $accent-orange
+#contact
+  background-color: $grey
+
+.about
+  &-title, &-content
+    height: 100vp
+    width: 50%
+  &-title
+    float: left
+  &-content
+    float: right
+    background-color: white
