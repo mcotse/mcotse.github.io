@@ -1,11 +1,3 @@
-=section-style
-  min-height: 100vh
-  width: 100%
-  position: relative
-  margin: 0
-  padding: 0
-  display: inline-block
-
 =pic-bg($bg)
   background: url($bg) no-repeat center center
   -webkit-background-size: cover
@@ -17,15 +9,15 @@
   background-color: $color
 
 #intro
-  +section-style
+  // +section-style
   +pic-bg("../images/bg.png")
-  padding-top: 65px
+
 #about
-  +section-style
+  // +section-style
   +solid-bg($primary-color)
 #contact
-  +section-style
+  // +section-style
   +solid-bg($grey)
 #work
-  +section-style
+  // +section-style
   +solid-bg($accent-orange)

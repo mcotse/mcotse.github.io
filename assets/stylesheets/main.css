@@ -342,53 +342,31 @@ table {
 body {
   font-family: Raleway; }
 
-.thin {
-  font-weight: 200; }
-
 h1 {
   font-weight: 400;
   font-size: 3.4em;
   margin-bottom: 0.2em; }
 
-#intro {
+.container {
   min-height: 100vh;
   width: 100%;
   position: relative;
-  margin: 0;
-  padding: 0;
-  display: inline-block;
+  display: inline-block; }
+
+#intro {
   background: url("../images/bg.png") no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
-  padding-top: 65px; }
+  background-size: cover; }
 
 #about {
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  display: inline-block;
   background-color: #46AAD9; }
 
 #contact {
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  display: inline-block;
   background-color: #AAAAAA; }
 
 #work {
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  display: inline-block;
   background-color: #F58255; }
 
 .headroom {
@@ -396,6 +374,9 @@ h1 {
   height: 65px;
   position: fixed;
   z-index: 9999999;
+  right: 0;
+  left: 0;
+  top: 0;
   background-color: #40474d;
   padding-left: 4%;
   padding-right: 4%;
