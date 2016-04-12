@@ -357,7 +357,7 @@ h1 {
   margin: 0;
   padding: 0;
   display: inline-block;
-  background: url("../images/bigbg.png") no-repeat center center;
+  background: url("../images/bg.png") no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -391,51 +391,38 @@ h1 {
   display: inline-block;
   background-color: #F58255; }
 
-.main-nav {
-  text-align: center; }
-  .main-nav .big-slash {
-    font-size: 4em;
-    font-weight: 200;
-    font-family: Times New Roman; }
-
 .headroom {
   text-align: center;
   height: 65px;
   position: fixed;
-  z-index: 10;
-  right: 0;
-  left: 0;
-  top: 0;
+  z-index: 9999999;
   background-color: #40474d;
   padding-left: 4%;
   padding-right: 4%;
-  transition: all 0.25s ease-in-out;
+  transition: all 0.3s ease-in-out;
   opacity: 0.8;
-  backface-visibility: hidden;
-  z-index: 100;
-  *zoom: 1; }
+  backface-visibility: hidden; }
   .headroom:before, .headroom:after {
     content: " ";
     display: table; }
   .headroom:after {
     clear: both; }
-  .headroom .big-slash {
+  .headroom--pinned {
+    transform: translateY(0%); }
+  .headroom--unpinned {
+    transform: translateY(-100%); }
+  .headroom .container {
+    height: 70px; }
+  .headroom slash {
+    color: #748185;
+    vertical-align: middle;
     font-size: 4em;
     font-weight: 200;
     font-family: Times New Roman; }
-  .headroom .container {
-    height: 70px; }
-  .headroom span {
-    color: #748185;
-    vertical-align: middle; }
   .headroom a {
     font-size: 0.8em;
     color: #FFFFFF;
     text-decoration: none;
     vertical-align: middle; }
-  .headroom--pinned {
-    transform: translateY(0%); }
-  .headroom--unpinned {
-    transform: translateY(-100%); }
 
 /*# sourceMappingURL=main.css.map */

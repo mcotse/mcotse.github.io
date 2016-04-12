@@ -1,39 +1,18 @@
-.main-nav
-  // background-color: $grey
-  // color: white
-  // // margin-top: -70px
-  text-align: center
-  // height: 70px
-  // // box-shadow: 0 2px 3px rgba(0,0,0,.4)
-  // z-index: 99999
-  // position: relative
-  // vertical-align: 20px
-
-  .big-slash
-    font-size: 4em
-    font-weight: 200
-    font-family: Times New Roman
-
-// .main-nav-scrolled
-  position: fixed
-  width: 100%
-  // top: 0%
 .headroom
   text-align: center
   height: 65px
   position: fixed
-  z-index: 10
-  right: 0
-  left: 0
-  top: 0
+  z-index: 9999999
+  // right: 0
+  // left: 0
+  // top: 0
   background-color: #40474d
   padding-left: 4%
   padding-right: 4%
-  transition: all .25s ease-in-out
+  transition: all .3s ease-in-out
   opacity: 0.8
   backface-visibility: hidden
-  z-index: 100
-  *zoom: 1
+
   &:before, &:after
     content: " "
     display: table
@@ -41,25 +20,23 @@
   &:after
     clear: both
 
-  .big-slash
-    font-size: 4em
-    font-weight: 200
-    font-family: Times New Roman
-
-  .container
-    height: 70px
-
-  span
-    color: #748185
-    vertical-align: middle
-  a
-    font-size: 0.8em
-    color: #FFFFFF
-    text-decoration: none
-    vertical-align: middle
-
   &--pinned
     transform: translateY(0%)
 
   &--unpinned
     transform: translateY(-100%)
+  .container
+    height: 70px
+
+  //the slash
+  slash
+    color: #748185
+    vertical-align: middle
+    font-size: 4em
+    font-weight: 200
+    font-family: Times New Roman
+  a
+    font-size: 0.8em
+    color: #FFFFFF
+    text-decoration: none
+    vertical-align: middle
