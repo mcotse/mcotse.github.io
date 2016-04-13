@@ -17,27 +17,30 @@
 #contact
   background-color: $grey
 
-=stickyspanwhite
-  background-color: white
+=stickyspanscreen
   top: 0
   bottom: 0
   position: absolute
 
 .about, .contact
   &-title, &-content
+    +stickyspanscreen
     width: 50%
   &-title
     float: left
   &-content
-    +stickyspanwhite
+    +stickyspanscreen
+    background-color: white
     float: right
     right: 0
 
 .work
   &-title, &-content
     width: 50%
+    +stickyspanscreen
   &-title
-    +stickyspanwhite
+    +stickyspanscreen
+    background-color: white
     float: left
     left: 0
   &-content
