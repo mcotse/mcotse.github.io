@@ -408,6 +408,13 @@ h1 {
   .about > .title {
     vertical-align: middle; }
 
+.contact {
+  font-size: 40px;
+  padding-left: 20px; }
+  .contact > div > a:-webkit-any-link {
+    color: #46AAD9;
+    text-decoration: none; }
+
 .headroom {
   text-align: center;
   height: 65px;
