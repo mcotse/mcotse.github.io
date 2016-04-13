@@ -403,6 +403,11 @@ h1 {
   .subsection-white {
     background-color: white; }
 
+.about {
+  flex: 1; }
+  .about > .title {
+    vertical-align: middle; }
+
 .headroom {
   text-align: center;
   height: 65px;

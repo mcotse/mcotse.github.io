@@ -1,49 +1,23 @@
-// var height = $(window).height();
-// var  mn = $(".main-nav");
-//     mns = "main-nav-scrolled";
-//     hdr = $('header').height();
-//
-// (function () {
-//     $(window).scroll(function () {
-//         var oVal;
-//         oVal = $(window).scrollTop() / height * 2;
-//         return $('.blur').css('opacity', oVal);
-//     });
-// }.call(this));
-
-// $(window).scroll(function() {
-//   if( $(this).scrollTop() > hdr ) {
-//     mn.addClass(mns);
-//   } else {
-//     mn.removeClass(mns);
-//   }
-// });
-// grab an element
 var Header = document.querySelector('header');
 var headroom = new Headroom(Header, {
   "offset": 205,
   "tolerance": 5
 });
 headroom.init();
-//
-// $(document).ready(function(){
-//    // cache the window object
-//    $window = $(window);
-//
-//    $('section[data-type="background"]').each(function(){
-//      // declare the variable to affect the defined data-type
-//      var $scroll = $(this);
-//
-//       $(window).scroll(function() {
-//         // HTML5 proves useful for helping with creating JS functions!
-//         // also, negative value because we're scrolling upwards
-//         var yPos = -($window.scrollTop() / $scroll.data('speed'));
-//
-//         // background position
-//         var coords = '50% '+ yPos + 'px';
-//
-//         // move the background
-//         $scroll.css({ backgroundPosition: coords });
-//       }); // end window scroll
-//    });  // end section function
-// }); // close out script
+
+//nav-scrolling
+$("#about-nav").click(function() {
+    $('html, body').animate({
+        scrollTop: $("#about").offset().top
+    }, 700);
+});
+$("#work-nav").click(function() {
+    $('html, body').animate({
+        scrollTop: $("#work").offset().top
+    }, 700);
+});
+$("#contact-nav").click(function() {
+    $('html, body').animate({
+        scrollTop: $("#contact").offset().top
+    }, 700);
+});
