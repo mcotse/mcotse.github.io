@@ -96,7 +96,7 @@ body {
   color: #FFF; }
 
 .letter--black:before {
-  color: #01010f; }
+  color: #444444; }
 
 .letter:after, .letter--black:after {
   color: rgba(0, 0, 0, 0.11);
@@ -181,11 +181,73 @@ body {
     vertical-align: middle; }
 
 .contact {
-  font-size: 40px;
-  padding-left: 20px; }
-  .contact > div > a:-webkit-any-link {
-    color: black;
-    text-decoration: none; }
+  padding-left: 20px;
+  padding-right: 20px; }
+  .contact .text {
+    color: #444444;
+    font-size: 1.2em;
+    margin-bottom: 25px;
+    font-weight: 200; }
+  .contact .social {
+    width: 210px;
+    height: 40px;
+    text-align: center;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    margin: -20px 0 0 -105px;
+    padding: 0; }
+    .contact .social li {
+      list-style-type: none;
+      display: inline-block;
+      margin: 0 0 0 -10px;
+      pading: 0; }
+      .contact .social li a {
+        text-align: center;
+        color: #444444; }
+        .contact .social li a i {
+          display: inline-block;
+          font-size: 0;
+          line-height: 1;
+          cursor: pointer;
+          padding: 10px;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          text-align: center;
+          position: relative;
+          color: #444444;
+          z-index: 1;
+          transition: all 0.2s ease-in-out; }
+          .contact .social li a i:before {
+            font-size: 20px;
+            z-index: 2;
+            position: relative; }
+          .contact .social li a i:after {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            content: "";
+            transform: scale(0.2);
+            transition: all 0.2s ease-in-out; }
+          .contact .social li a i:hover {
+            color: #ffffff; }
+            .contact .social li a i:hover:after {
+              transform: scale(1);
+              opacity: 1; }
+    .contact .social .facebook .fa:after {
+      background: #3b5998; }
+    .contact .social .github .fa:after {
+      background: #444444; }
+    .contact .social .instagram .fa:after {
+      background: #125688; }
+    .contact .social .linkedin .fa:after {
+      background: #007bb5; }
 
 .headroom {
   text-align: center;
