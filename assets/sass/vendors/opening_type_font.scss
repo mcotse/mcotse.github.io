@@ -10,7 +10,7 @@ div.title{
   // margin: 0 auto;
   // text-align: center;
 }
-.letter{
+.letter, .letter--black{
   display: inline-block;
   font-weight: 900;
   font-size: 5em;
@@ -29,7 +29,7 @@ div.title{
 .grey{
   color: $grey;
 }
-.letter:before, .letter:after{
+.letter:before, .letter:after, .letter--black:before, .letter--black:after{
   position:absolute;
   content: attr(data-letter);
   transform-origin: top left;
@@ -37,12 +37,10 @@ div.title{
   left:0;
 }
 
-.letter, .letter:before, .letter:after{
+.letter, .letter:before, .letter:after, .letter--black, .letter--black:before, .letter--black:after{
   transition: all 0.3s ease-in-out;
 }
-
-.letter:before{
-  color: #fff;
+.letter-before{
   text-shadow:
     -1px 0px 1px rgba(255,255,255,.8),
     1px 0px 1px rgba(0,0,0,.8);
@@ -52,8 +50,18 @@ div.title{
     rotateY(-18deg)
     rotateZ(0deg);
 }
+.letter:before{
+  @extend .letter-before;
+  color: #FFF;
 
-.letter:after{
+}
+.letter--black:before{
+  @extend .letter-before;
+  color: $black;
+}
+
+
+.letter:after, .letter--black:after{
   color: rgba(0,0,0,.11);
   z-index:2;
   transform:
@@ -63,14 +71,21 @@ div.title{
     rotateZ(0deg)
     skew(0deg,1deg);
 }
-.letter:hover:before{
-  color: #fafafa;
+.letter-hover-before{
   transform:
     rotateX(0deg)
     rotateY(-30deg)
     rotateZ(0deg);
 }
-.letter:hover:after{
+.letter:hover:before{
+  @extend .letter-hover-before;
+  color: #fafafa;
+}
+.letter--black:hover:before{
+  @extend .letter-hover-before;
+  color: #12121c;
+}
+.letter:hover:after, .letter--black:hover:after{
   transform:
     scale(1.08,1)
     rotateX(0deg)

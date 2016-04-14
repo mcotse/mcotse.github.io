@@ -58,7 +58,7 @@ h1 {
 body {
   font-family: 'Lato', sans-serif; }
 
-.letter {
+.letter, .letter--black {
   display: inline-block;
   font-weight: 900;
   font-size: 5em;
@@ -77,32 +77,42 @@ body {
 .grey {
   color: #AAAAAA; }
 
-.letter:before, .letter:after {
+.letter:before, .letter:after, .letter--black:before, .letter--black:after {
   position: absolute;
   content: attr(data-letter);
   transform-origin: top left;
   top: 0;
   left: 0; }
 
-.letter, .letter:before, .letter:after {
+.letter, .letter:before, .letter:after, .letter--black, .letter--black:before, .letter--black:after {
   transition: all 0.3s ease-in-out; }
 
-.letter:before {
-  color: #fff;
+.letter-before, .letter:before, .letter--black:before {
   text-shadow: -1px 0px 1px rgba(255, 255, 255, 0.8), 1px 0px 1px rgba(0, 0, 0, 0.8);
   z-index: 3;
   transform: rotateX(0deg) rotateY(-18deg) rotateZ(0deg); }
 
-.letter:after {
+.letter:before {
+  color: #FFF; }
+
+.letter--black:before {
+  color: #01010f; }
+
+.letter:after, .letter--black:after {
   color: rgba(0, 0, 0, 0.11);
   z-index: 2;
   transform: scale(1.08, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 1deg); }
 
-.letter:hover:before {
-  color: #fafafa;
+.letter-hover-before, .letter:hover:before, .letter--black:hover:before {
   transform: rotateX(0deg) rotateY(-30deg) rotateZ(0deg); }
 
-.letter:hover:after {
+.letter:hover:before {
+  color: #fafafa; }
+
+.letter--black:hover:before {
+  color: #12121c; }
+
+.letter:hover:after, .letter--black:hover:after {
   transform: scale(1.08, 1) rotateX(0deg) rotateY(30deg) rotateZ(0deg) skew(0deg, 15deg); }
 
 #intro {
