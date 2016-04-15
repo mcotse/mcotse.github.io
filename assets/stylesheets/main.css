@@ -1,5 +1,6 @@
-@import url(http://fonts.googleapis.com/css?family=Lato:900);
+@import url(http://fonts.googleapis.com/css?family=Lato:900,400);
 @import url(https://fonts.googleapis.com/css?family=Merriweather);
+@import url(https://fonts.googleapis.com/css?family=Oswald:700);
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -50,7 +51,8 @@ table {
   margin: 0; }
 
 body {
-  font-family: Lato; }
+  font-family: Lato;
+  font-size: 1.2em; }
 
 h1 {
   font-weight: 400;
@@ -69,13 +71,13 @@ h1 {
   color: #AAAAAA; }
 
 .contact {
-  padding-left: 20px;
-  padding-right: 20px; }
+  padding: 50px 40px; }
   .contact .text {
     color: #444444;
-    font-size: 1.2em;
-    margin-bottom: 25px;
-    font-weight: 200; }
+    line-height: 1.4;
+    text-align: left;
+    font-weight: 400;
+    margin-bottom: 25px; }
   .contact .social {
     width: 210px;
     height: 40px;
@@ -137,14 +139,11 @@ h1 {
     .contact .social .linkedin .fa:after {
       background: #007bb5; }
 
-.title {
-  font-weight: 900; }
-
 .letter, .letter--black {
   display: inline-block;
   font-weight: 900;
-  font-size: 5em;
-  margin: 0.07em;
+  font-size: 5.5em;
+  margin: 0.03em;
   position: relative;
   transform-style: preserve-3d;
   perspective: 400;
@@ -179,13 +178,17 @@ h1 {
   transform: rotateX(0deg) rotateY(-30deg) rotateZ(0deg); }
 
 .letter:hover:before {
-  color: #fafafa; }
+  color: #f1f1f1; }
 
 .letter--black:hover:before {
-  color: #12121c; }
+  color: #373535; }
 
 .about {
-  font-family: Merriweather; }
+  padding: 50px 40px; }
+  .about .text {
+    line-height: 1.4;
+    text-align: left;
+    font-weight: 400; }
 
 .headroom {
   text-align: center;
@@ -215,11 +218,11 @@ h1 {
   .headroom slash {
     color: #748185;
     vertical-align: middle;
-    font-size: 4em;
+    font-size: 3.5em;
     font-weight: 200;
     font-family: Times New Roman; }
   .headroom a {
-    font-size: 0.8em;
+    font-size: 0.7em;
     color: #FFFFFF;
     text-decoration: none;
     vertical-align: middle; }

@@ -1,8 +1,8 @@
 .letter, .letter--black{
   display: inline-block;
   font-weight: 900;
-  font-size: 5em;
-  margin: 0.07em;
+  font-size: 5.5em;
+  margin: 0.03em;
   position: relative;
   transform-style: preserve-3d;
   perspective: 400;
@@ -68,9 +68,9 @@
 }
 .letter:hover:before{
   @extend .letter-hover-before;
-  color: #fafafa;
+  color: #f1f1f1;
 }
 .letter--black:hover:before{
   @extend .letter-hover-before;
-  color: #12121c;
+  color: #373535;
 }
