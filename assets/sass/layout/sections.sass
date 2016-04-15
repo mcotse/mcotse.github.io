@@ -1,3 +1,19 @@
+.section-wrapper
+  min-height: 100vh
+  display: flex
+  flex-direction: row
+
+.subsection
+  flex: 1
+  display: flex
+  text-align: center
+  flex-direction: column
+  justify-content: center
+
+  &-white
+    @extend .subsection
+    background-color: white
+
 =pic-bg($bg)
   background: url($bg) no-repeat center center
   -webkit-background-size: cover
@@ -46,24 +62,9 @@
   &-content
     float: right
 
-.section-wrapper
-  min-height: 100vh
-  display: flex
-  flex-direction: row
-
-.subsection
-  flex: 1
-  display: flex
-  text-align: center
-  flex-direction: column
-  justify-content: center
-
-  &-white
-    @extend .subsection
-    background-color: white
 .about
   flex: 1
-  > .title
+  .title
     vertical-align: middle
 
 
