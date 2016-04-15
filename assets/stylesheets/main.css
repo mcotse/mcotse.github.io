@@ -247,39 +247,4 @@ h1 {
 #contact {
   background-color: #AAAAAA; }
 
-.about-title, .about-content, .contact-title, .contact-content {
-  top: 0;
-  bottom: 0;
-  position: absolute;
-  width: 50%; }
-.about-title, .contact-title {
-  float: left; }
-.about-content, .contact-content {
-  top: 0;
-  bottom: 0;
-  position: absolute;
-  background-color: white;
-  float: right;
-  right: 0; }
-
-.work-title, .work-content {
-  width: 50%;
-  top: 0;
-  bottom: 0;
-  position: absolute; }
-.work-title {
-  top: 0;
-  bottom: 0;
-  position: absolute;
-  background-color: white;
-  float: left;
-  left: 0; }
-.work-content {
-  float: right; }
-
-.about {
-  flex: 1; }
-  .about .title {
-    vertical-align: middle; }
-
 /*# sourceMappingURL=main.css.map */
