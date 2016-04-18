@@ -51,7 +51,8 @@ table {
 body {
   font-family: Lato;
   font-size: 1em;
-  font-weight: 400; }
+  font-weight: 400;
+  color: #444444; }
 
 h1 {
   font-weight: 400;
@@ -238,28 +239,11 @@ strong {
     text-decoration: none;
     vertical-align: middle; }
 
-#intro {
-  background: url("../images/bg.png") no-repeat center center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover; }
-
-#about {
-  background-color: #46AAD9; }
-
-#work {
-  background-color: #F58255; }
-
-#contact {
-  background-color: #AAAAAA; }
-
 .section-wrapper {
-  min-height: 100vh;
   display: flex;
   flex-direction: row; }
 
-.subsection, .subsection-white {
+.subsection, .subsection-white, .subsection-blue, .subsection-orange, .subsection-grey {
   flex: 1;
   display: flex;
   text-align: center;
@@ -267,5 +251,19 @@ strong {
   justify-content: center; }
   .subsection-white {
     background-color: white; }
+  .subsection-blue {
+    background-color: #46AAD9; }
+  .subsection-orange {
+    background-color: #F58255; }
+  .subsection-grey {
+    background-color: #AAAAAA; }
+
+.intro {
+  height: 100vh;
+  background: url("../images/bg.png") no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
 
 /*# sourceMappingURL=main.css.map */

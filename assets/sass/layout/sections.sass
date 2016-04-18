@@ -5,17 +5,10 @@
   -o-background-size: cover
   background-size: cover
 
-#intro
-  +pic-bg("../images/bg.png")
-#about
-  background-color: $primary-color
-#work
-  background-color: $accent-orange
-#contact
-  background-color: $grey
+
 
 .section-wrapper
-  min-height: 100vh
+  // min-height: 100vh
   display: flex
   flex-direction: row
 
@@ -29,3 +22,15 @@
   &-white
     @extend .subsection
     background-color: white
+  &-blue
+    @extend .subsection
+    background-color: $primary-color
+  &-orange
+    @extend .subsection
+    background-color: $accent-orange
+  &-grey
+    @extend .subsection
+    background-color: $grey
+.intro
+  height: 100vh
+  +pic-bg("../images/bg.png")
