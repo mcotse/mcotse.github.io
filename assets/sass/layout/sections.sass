@@ -8,7 +8,7 @@
 
 
 .section-wrapper
-  // min-height: 100vh
+  min-height: 100vh
   display: flex
   flex-direction: row
 
@@ -27,10 +27,17 @@
     background-color: $primary-color
   &-orange
     @extend .subsection
-    background-color: $accent-orange
+    background-color: $accent-purple
   &-grey
     @extend .subsection
     background-color: $grey
+  &-contact
+    @extend .subsection
+    +pic-bg("../images/contact-bg.jpg")
 .intro
   height: 100vh
-  +pic-bg("../images/bg.png")
+  background: $grey
+  .title
+    h1
+      font-size: 4em
+    // +pic-bg("../images/bg.png")
