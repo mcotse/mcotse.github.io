@@ -21,3 +21,5 @@ $("#contact-nav").click(function() {
         scrollTop: $("#contact").offset().top
     }, 700);
 });
+
+$('[data-typer-targets]').typer()
