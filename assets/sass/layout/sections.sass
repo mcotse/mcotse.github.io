@@ -13,6 +13,7 @@
   flex-direction: row
 
 .subsection
+  min-height: 20vh
   flex: 1
   display: flex
   text-align: center
@@ -22,7 +23,7 @@
   &-white
     @extend .subsection
     background-color: white
-  &-blue
+  &-about
     @extend .subsection
     background-color: $primary-color
   &-orange
@@ -44,3 +45,40 @@
     h1
       font-size: 4em
     // +pic-bg("../images/bg.png")
+  .icons-list
+    display: none
+
+@media all and (max-width: 600px)
+  .subsection-title
+    max-height: 20vh
+  .section-wrapper
+    /* On small screens, we are no longer using row direction but column */
+    flex-direction: column
+  .subsection-work
+    background-color: $grey
+  .subsection-contact
+    display: none
+  .typer
+    margin-top: 20px
+  .intro .icons-list
+    display: inline-block
+    font-size: 1.5em
+    padding-left: 10px
+    margin-top: 30px
+    color: #373535
+    li
+      display: inline
+      list-style-type: none
+      padding-right: 10px
+      a:link
+        color: $black
+        text-decoration: none
+      a:visited
+        color: $black
+        text-decoration: none
+      a:hover
+        color: $dark-grey
+        text-decoration: none
+      a:active
+        color: $black
+        text-decoration: none
