@@ -277,7 +277,3 @@ String.prototype.rightChars = function(n){
 
 
 // $('.type-once').typeTo("Testing Typer.js jQuery Plugin with a 1 time text string.");
-
-
-
-$('[data-typer-targets]').typer();

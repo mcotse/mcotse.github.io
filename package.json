@@ -1,0 +1,25 @@
+{
+  "name": "personal-site",
+  "version": "0.0.1",
+  "description": "Work in progress.",
+  "main": "index.html",
+  "devDependencies": {
+    "browser-sync": "^2.17.5",
+    "gulp": "^3.9.1",
+    "gulp-ruby-sass": "^2.1.0",
+    "gulp-sass": "^2.3.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcotse/personal-site.git"
+  },
+  "author": "Matthew Tse",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mcotse/personal-site/issues"
+  },
+  "homepage": "https://github.com/mcotse/personal-site#readme"
+}
