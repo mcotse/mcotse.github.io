@@ -1,13 +1,13 @@
-.nav {
+a {
   cursor: pointer;
   cursor: hand;
-
+}
+//link hover animation
+.underline-hover{
   a {
     display: inline-block;
     position: relative;
   }
-
-  //link hover animation
   a:after {
     content: "";
     position: absolute;
@@ -28,5 +28,11 @@
     opacity: 1;
     -webkit-transform: scale(1);
     transform: scale(1);
+  }
+}
+.underline-hover-thick{
+  @extend .underline-hover;
+  a:after{
+    border-bottom: 3px solid;
   }
 }
