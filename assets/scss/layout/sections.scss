@@ -1,0 +1,135 @@
+@mixin pic-bg($bg) {
+  background: url($bg) no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.section-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.subsection {
+  min-height: 20vh;
+  flex: 1;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+
+  &-white {
+    @extend .subsection;
+
+    background-color: white;
+  }
+
+  &-about {
+    @extend .subsection;
+
+    background-color: $primary-color;
+  }
+
+  &-orange {
+    @extend .subsection;
+
+    background-color: $accent-purple;
+  }
+
+  &-grey {
+    @extend .subsection;
+
+    background-color: $grey;
+  }
+
+  &-contact {
+    @extend .subsection;
+
+    @include pic-bg("../images/contact-bg.jpg");
+  }
+}
+
+.intro {
+  height: 100vh;
+  background: $grey;
+
+  .title {
+    div {
+      display: inline-block;
+    }
+
+    h1 {
+      font-size: 4em;
+    }
+
+    // +pic-bg("../images/bg.png")
+
+  }
+
+  .icons-list {
+    display: none;
+  }
+}
+
+@media all and (max-width: 600px) {
+  .subsection-title {
+    max-height: 20vh;
+  }
+
+  .section-wrapper {
+    /* On small screens, we are no longer using row direction but column */
+    flex-direction: column;
+  }
+
+  .subsection-work {
+    background-color: $grey;
+  }
+
+  .subsection-contact {
+    display: none;
+  }
+
+  .typer {
+    margin-top: 20px;
+  }
+
+  .intro .icons-list {
+    display: inline-block;
+    font-size: 1.5em;
+    padding-left: 10px;
+    margin-top: 30px;
+    color: #373535;
+
+    li {
+      display: inline;
+      list-style-type: none;
+      padding-right: 10px;
+
+      a:link {
+        color: $black;
+        text-decoration: none;
+      }
+
+      a:visited {
+        color: $black;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: $dark-grey;
+        text-decoration: none;
+      }
+
+      a:active {
+        color: $black;
+        text-decoration: none;
+      }
+    }
+  }
+  #contact {
+    min-height: 20vh !important;
+    max-height: 25vh !important;
+  }
+}

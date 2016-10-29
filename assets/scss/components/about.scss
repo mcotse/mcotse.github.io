@@ -1,0 +1,31 @@
+.about {
+  // font-family: montserrat-light
+  padding: 50px 70px;
+  flex: 1;
+  overflow-y: scroll;
+  min-height: 0px;
+
+  .text {
+    flex: 1;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  a:link {
+    color: $black;
+  }
+
+  a:visited {
+    color: $black;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: $dark-grey;
+    text-decoration: none;
+  }
+
+  a:active {
+    color: $black;
+  }
+}
