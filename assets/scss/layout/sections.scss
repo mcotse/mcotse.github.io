@@ -50,7 +50,12 @@
     @include pic-bg("../images/contact-bg.jpg");
   }
 }
-
+.flex-3{
+  flex-grow: 3;
+}
+.flex-2{
+  flex-grow: 2;
+}
 .intro {
   height: 100vh;
   background: $grey;
