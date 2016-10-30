@@ -22,8 +22,16 @@
   background-size: 110%;
   transition: all .3s ease-in-out;
   background-position: 50% 50%;
+  cursor: pointer;
+  cursor: hand;
   &:hover{
-    background-size: 100%
+    background-size: 100%;
+    @extend .underline-hover-thick;
+    a:after {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
   }
   div {
     color: $white;
