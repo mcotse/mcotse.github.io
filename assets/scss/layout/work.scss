@@ -19,13 +19,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-size: 110%;
+  background-size: 100%;
   transition: all .3s ease-in-out;
   background-position: 50% 50%;
   cursor: pointer;
   cursor: hand;
   &:hover{
-    background-size: 100%;
+    background-size: 110%;
     @extend .underline-hover-thick;
     a:after {
       opacity: 1;
