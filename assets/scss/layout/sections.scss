@@ -64,13 +64,9 @@
     div {
       display: inline-block;
     }
-
     h1 {
       font-size: 4em;
     }
-
-    // +pic-bg("../images/bg.png")
-
   }
 
   .icons-list {
@@ -78,6 +74,9 @@
   }
 }
 
+.zoom:hover{
+    flex-grow: 3 !important;
+}
 @media all and (max-width: 600px) {
   .subsection-title {
     max-height: 20vh;
