@@ -268,15 +268,45 @@ strong {
   100% {
     opacity: 1; } }
 
+.mainlogo {
+  width: 100%; }
+
+.logopath {
+  fill: none;
+  stroke: black;
+  stroke-width: 50;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-miterlimit: 10;
+  stroke-dasharray: 21000;
+  animation: animate-logo 2s linear;
+  width: 100%; }
+
+@keyframes animate-logo {
+  0% {
+    stroke-dashoffset: 21000; }
+  40% {
+    stroke-dashoffset: 0;
+    stroke-dasharray: 21000;
+    opacity: 0.4; }
+  60% {
+    opacity: 0.1;
+    stroke-width: 50; }
+  85% {
+    opacity: 1;
+    stroke-width: 80; }
+  100% {
+    stroke-width: 50; } }
+
 a {
   cursor: pointer;
   cursor: hand; }
 
-.underline-hover a, .underline-hover-thick a {
+.underline-hover a, .underline-hover-thick a, #watchr:hover a, #uwatm8:hover a, #clarifind:hover a, #findit:hover a {
   display: inline-block;
   position: relative; }
 
-.underline-hover a:after, .underline-hover-thick a:after {
+.underline-hover a:after, .underline-hover-thick a:after, #watchr:hover a:after, #uwatm8:hover a:after, #clarifind:hover a:after, #findit:hover a:after {
   content: "";
   position: absolute;
   left: 0;
@@ -291,12 +321,12 @@ a {
   -webkit-transform: scale(0, 1);
   transform: scale(0, 1); }
 
-.underline-hover a:hover:after, .underline-hover-thick a:hover:after {
+.underline-hover a:hover:after, .underline-hover-thick a:hover:after, #watchr:hover a:hover:after, #uwatm8:hover a:hover:after, #clarifind:hover a:hover:after, #findit:hover a:hover:after {
   opacity: 1;
   -webkit-transform: scale(1);
   transform: scale(1); }
 
-.underline-hover-thick a:after {
+.underline-hover-thick a:after, #watchr:hover a:after, #uwatm8:hover a:after, #clarifind:hover a:after, #findit:hover a:after {
   border-bottom: 3px solid; }
 
 .section-wrapper {
@@ -326,6 +356,12 @@ a {
     -o-background-size: cover;
     background-size: cover; }
 
+.flex-3 {
+  flex-grow: 3; }
+
+.flex-2 {
+  flex-grow: 2; }
+
 .intro {
   height: 100vh;
   background: #e1e8f0; }
@@ -335,6 +371,9 @@ a {
     font-size: 4em; }
   .intro .icons-list {
     display: none; }
+
+.zoom:hover {
+  flex-grow: 3 !important; }
 
 @media all and (max-width: 600px) {
   .subsection-title {
@@ -375,8 +414,7 @@ a {
     max-height: 25vh !important; } }
 
 #watchr {
-  background: url("../images/blurred/watchr.jpg");
-  background-position: 50% 50%; }
+  background: url("../images/blurred/watchr.jpg"); }
 
 #findit {
   background: url("../images/blurred/Findit.jpg"); }
@@ -392,7 +430,17 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-size: cover; }
+  background-size: 100%;
+  transition: all .3s ease-in-out;
+  background-position: 50% 50%;
+  cursor: pointer;
+  cursor: hand; }
+  #watchr:hover, #uwatm8:hover, #clarifind:hover, #findit:hover {
+    background-size: 110%; }
+    #watchr:hover a:after, #uwatm8:hover a:after, #clarifind:hover a:after, #findit:hover a:after {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      transform: scale(1); }
   #watchr div, #uwatm8 div, #clarifind div, #findit div {
     color: #ffffff;
     font-weight: 900;

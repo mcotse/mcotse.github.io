@@ -1,0 +1,37 @@
+.mainlogo {
+    width: 100%
+}
+
+.logopath {
+  fill: none;
+  stroke: black;
+  stroke-width: 50;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-miterlimit: 10;
+  stroke-dasharray: 21000;
+  animation: animate-logo 2s linear;
+  width:100%;
+}
+
+@keyframes animate-logo {
+  0% {
+    stroke-dashoffset: 21000;
+  }
+  40% {
+    stroke-dashoffset: 0;
+    stroke-dasharray: 21000;
+    opacity: 0.4;
+  }
+  60%{
+    opacity: 0.1;
+    stroke-width: 50;
+  }
+  85% {
+    opacity: 1;
+    stroke-width: 80;
+  }
+  100% {
+    stroke-width: 50;
+  }
+}
