@@ -1,10 +1,11 @@
 .arrow {
   width: 30px;
   height: 30px;
-  top: 95%;
+  bottom: 45px;
   position: absolute;
-  left: 50%;
-  margin: (-20px) 0 0 -20px;
+  left: 0%;
+  right: 0%;
+  margin: -20px auto;
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
