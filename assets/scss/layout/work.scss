@@ -22,21 +22,38 @@
   background-size: cover;
   transition: all .3s ease-in-out;
   background-position: 50% 50%;
-  cursor: pointer;
-  cursor: hand;
   &:hover{
     background-size: 110%;
-    @extend .underline-hover-thick;
-    a:after {
-      opacity: 1;
-      -webkit-transform: scale(1);
-      transform: scale(1);
+    .work-title{
+        // @extend .underline-hover-thick;
+        // a:after {
+        //     opacity: 1;
+        //     -webkit-transform: scale(1);
+        //     transform: scale(1);
+        // }
+    }
+    .plink{
+        opacity: 100;
     }
   }
-  div {
+  .work-title {
     color: $white;
     font-weight: 900;
     font-size: 3.5em;
 
+  }
+  .plink{
+      @extend .underline-hover;
+      a{
+          display: inline-block;
+          color: $white;
+          text-decoration: none;
+      }
+      a:after{
+          border-bottom: 2px solid;
+      }
+      display: inline-block;
+      opacity: 0;
+      transition: all .3s ease-in-out;
   }
 }

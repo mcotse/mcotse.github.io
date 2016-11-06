@@ -303,14 +303,13 @@ strong {
     stroke-width: 50; } }
 
 a {
-  cursor: pointer;
   cursor: hand; }
 
-.underline-hover a, .underline-hover-thick a, #watchr:hover a, #uwatm8:hover a, #clarifind:hover a, #findit:hover a {
+.underline-hover a, .underline-hover-thick a, #watchr .plink a, #uwatm8 .plink a, #clarifind .plink a, #findit .plink a {
   display: inline-block;
   position: relative; }
 
-.underline-hover a:after, .underline-hover-thick a:after, #watchr:hover a:after, #uwatm8:hover a:after, #clarifind:hover a:after, #findit:hover a:after {
+.underline-hover a:after, .underline-hover-thick a:after, #watchr .plink a:after, #uwatm8 .plink a:after, #clarifind .plink a:after, #findit .plink a:after {
   content: "";
   position: absolute;
   left: 0;
@@ -325,12 +324,12 @@ a {
   -webkit-transform: scale(0, 1);
   transform: scale(0, 1); }
 
-.underline-hover a:hover:after, .underline-hover-thick a:hover:after, #watchr:hover a:hover:after, #uwatm8:hover a:hover:after, #clarifind:hover a:hover:after, #findit:hover a:hover:after {
+.underline-hover a:hover:after, .underline-hover-thick a:hover:after, #watchr .plink a:hover:after, #uwatm8 .plink a:hover:after, #clarifind .plink a:hover:after, #findit .plink a:hover:after {
   opacity: 1;
   -webkit-transform: scale(1);
   transform: scale(1); }
 
-.underline-hover-thick a:after, #watchr:hover a:after, #uwatm8:hover a:after, #clarifind:hover a:after, #findit:hover a:after {
+.underline-hover-thick a:after {
   border-bottom: 3px solid; }
 
 .section-wrapper {
@@ -436,16 +435,22 @@ a {
   justify-content: center;
   background-size: cover;
   transition: all .3s ease-in-out;
-  background-position: 50% 50%;
-  cursor: pointer;
-  cursor: hand; }
+  background-position: 50% 50%; }
   #watchr:hover, #uwatm8:hover, #clarifind:hover, #findit:hover {
     background-size: 110%; }
-    #watchr:hover a:after, #uwatm8:hover a:after, #clarifind:hover a:after, #findit:hover a:after {
-      opacity: 1;
-      -webkit-transform: scale(1);
-      transform: scale(1); }
-  #watchr div, #uwatm8 div, #clarifind div, #findit div {
+    #watchr:hover .plink, #uwatm8:hover .plink, #clarifind:hover .plink, #findit:hover .plink {
+      opacity: 100; }
+  #watchr .work-title, #uwatm8 .work-title, #clarifind .work-title, #findit .work-title {
     color: #ffffff;
     font-weight: 900;
     font-size: 3.5em; }
+  #watchr .plink, #uwatm8 .plink, #clarifind .plink, #findit .plink {
+    display: inline-block;
+    opacity: 0;
+    transition: all .3s ease-in-out; }
+    #watchr .plink a, #uwatm8 .plink a, #clarifind .plink a, #findit .plink a {
+      display: inline-block;
+      color: #ffffff;
+      text-decoration: none; }
+    #watchr .plink a:after, #uwatm8 .plink a:after, #clarifind .plink a:after, #findit .plink a:after {
+      border-bottom: 2px solid; }
