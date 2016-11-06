@@ -195,7 +195,7 @@ strong {
     color: rgba(0, 0, 0, 0.11);
     z-index: 2;
     transform: scale(1.08, 1) rotateX(0deg) rotateY(30deg) rotateZ(0deg) skew(0deg, 15deg); }
-  .letter-lifted:after:hover, .letter-lifted--black:after:hover {
+  .letter-lifted:hover:after, .letter-lifted--black:hover:after {
     color: rgba(0, 0, 0, 0.11);
     z-index: 2;
     transform: scale(1.08, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 1deg); }

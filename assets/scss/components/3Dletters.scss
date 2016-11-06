@@ -68,7 +68,7 @@
       rotateZ(0deg)
       skew(0deg,15deg);
   }
-  &:after:hover{
+  &:hover:after{
     color: rgba(0,0,0,.11);
     z-index:2;
     transform:
