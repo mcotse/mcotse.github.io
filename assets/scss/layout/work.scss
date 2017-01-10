@@ -6,15 +6,15 @@
   background: url("../images/blurred/FindIt.jpg");
 }
 
-#clarifind {
-  background: url("../images/blurred/clarifind.jpg");
+#uwparkingbot {
+  background: url("../images/blurred/uwparkingbot.jpg");
 }
 
-#uwatm8 {
-  background: url("../images//blurred/uwatm8.jpg");
+#scout {
+  background: url("../images/blurred/scout.jpg");
 }
 
-#watchr, #uwatm8, #clarifind, #findit {
+#watchr, #scout, #uwparkingbot, #findit {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -55,5 +55,9 @@
       display: inline-block;
       opacity: 0;
       transition: all .3s ease-in-out;
+  }
+  .tag-line{
+    color:$white;
+    margin-bottom:5px;
   }
 }
