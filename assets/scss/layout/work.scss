@@ -54,10 +54,42 @@
       }
       display: inline-block;
       opacity: 0;
-      transition: all .3s ease-in-out;
   }
   .tag-line{
     color:$white;
     margin-bottom:5px;
+  }
+}
+
+@media all and (max-width: 600px){
+  #watchr, #scout, #uwparkingbot, #findit {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-size: cover;
+    .work-title {
+      color: $white;
+      font-weight: 900;
+      font-size: 3em;
+
+    }
+    .plink{
+        a{
+            display: inline-block;
+            color: $white;
+            text-decoration: underline;
+        }
+        a:after{
+            border-bottom: 2px solid;
+        }
+        display: inline-block;
+        opacity: 100;
+        transition: all .3s ease-in-out;
+    }
+    .tag-line{
+      color:$white;
+      margin-bottom:5px;
+    }
   }
 }

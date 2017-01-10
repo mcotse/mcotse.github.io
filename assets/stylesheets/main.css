@@ -446,8 +446,7 @@ a {
     font-size: 3.5em; }
   #watchr .plink, #scout .plink, #uwparkingbot .plink, #findit .plink {
     display: inline-block;
-    opacity: 0;
-    transition: all .3s ease-in-out; }
+    opacity: 0; }
     #watchr .plink a, #scout .plink a, #uwparkingbot .plink a, #findit .plink a {
       display: inline-block;
       color: #ffffff;
@@ -457,3 +456,28 @@ a {
   #watchr .tag-line, #scout .tag-line, #uwparkingbot .tag-line, #findit .tag-line {
     color: #ffffff;
     margin-bottom: 5px; }
+
+@media all and (max-width: 600px) {
+  #watchr, #scout, #uwparkingbot, #findit {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-size: cover; }
+    #watchr .work-title, #scout .work-title, #uwparkingbot .work-title, #findit .work-title {
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 3em; }
+    #watchr .plink, #scout .plink, #uwparkingbot .plink, #findit .plink {
+      display: inline-block;
+      opacity: 100;
+      transition: all .3s ease-in-out; }
+      #watchr .plink a, #scout .plink a, #uwparkingbot .plink a, #findit .plink a {
+        display: inline-block;
+        color: #ffffff;
+        text-decoration: underline; }
+      #watchr .plink a:after, #scout .plink a:after, #uwparkingbot .plink a:after, #findit .plink a:after {
+        border-bottom: 2px solid; }
+    #watchr .tag-line, #scout .tag-line, #uwparkingbot .tag-line, #findit .tag-line {
+      color: #ffffff;
+      margin-bottom: 5px; } }
