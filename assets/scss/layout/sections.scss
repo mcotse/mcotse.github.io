@@ -137,3 +137,13 @@
     display: none;
   }
 }
+
+.footer{
+  text-align: left;
+  p{
+    margin: 10px auto 10px auto;
+    a:visited, a:link{
+      color: $black
+    }
+  }
+}

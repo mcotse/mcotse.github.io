@@ -416,6 +416,13 @@ a {
     opacity: 0;
     display: none; } }
 
+.footer {
+  text-align: left; }
+  .footer p {
+    margin: 10px auto 10px auto; }
+    .footer p a:visited, .footer p a:link {
+      color: #444444; }
+
 #watchr {
   background: url("../images/blurred/watchr.jpg"); }
 
