@@ -44,6 +44,13 @@
     background-color: $grey;
   }
 
+  &-hero {
+    @extend .subsection;
+
+    background-color: $grey;
+    @include pic-bg("../images/herobg.jpg");
+  }
+
   &-contact {
     @extend .subsection;
 
@@ -59,6 +66,7 @@
 .intro {
   height: 100vh;
   background: $grey;
+  @include pic-bg("../images/herobg.jpg");
 
   .title {
     div {
@@ -93,10 +101,6 @@
 
   .subsection-contact {
     display: none;
-  }
-
-  .typer {
-    margin-top: 20px;
   }
 
   .intro .icons-list {

@@ -1,0 +1,9 @@
+.typer{
+  color: $white;
+}
+
+@media all and (max-width: 600px) {
+  .typer {
+    margin-top: 20px;
+  }
+}
