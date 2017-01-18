@@ -30,6 +30,8 @@
     @extend .subsection;
 
     background-color: $primary-color;
+    @include pic-bg("../images/aboutbg.jpg");
+    background-position: 80% 60%;
   }
 
   &-orange {

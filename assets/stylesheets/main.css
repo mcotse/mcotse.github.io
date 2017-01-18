@@ -354,7 +354,13 @@ a {
   .subsection-white {
     background-color: white; }
   .subsection-about {
-    background-color: #0085CA; }
+    background-color: #0085CA;
+    background: url("../images/aboutbg.jpg") no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: 80% 60%; }
   .subsection-orange {
     background-color: #9068be; }
   .subsection-grey {
