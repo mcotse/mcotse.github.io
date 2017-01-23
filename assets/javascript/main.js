@@ -16,3 +16,8 @@ $(".contact-nav").click(function() {
 });
 
 $('[data-typer-targets]').typer()
+
+//add breakline in between name for mobile
+if ($(window).width() <= 600) {
+  $('#mobile-breakline').after('<br>')
+}

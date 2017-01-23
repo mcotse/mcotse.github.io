@@ -504,26 +504,31 @@ a {
     font-size: 1.5em;
     padding-left: 10px;
     margin-top: 30px;
-    color: #373535; }
+    color: #e1e8f0; }
     .intro .icons-list li {
       display: inline;
       list-style-type: none;
       padding-right: 10px; }
       .intro .icons-list li a:link {
-        color: #444444;
+        color: #e1e8f0;
         text-decoration: none; }
       .intro .icons-list li a:visited {
-        color: #444444;
+        color: #e1e8f0;
         text-decoration: none; }
       .intro .icons-list li a:hover {
         color: #636363;
         text-decoration: none; }
       .intro .icons-list li a:active {
-        color: #444444;
+        color: #e1e8f0;
         text-decoration: none; }
   #contact {
     opacity: 0;
-    display: none; } }
+    display: none; }
+  .nav {
+    display: none;
+    opacity: 0; }
+  .letter, .letter-lifted, .letter--black, .letter-lifted--black {
+    font-size: 3em; } }
 
 .footer {
   text-align: left; }
