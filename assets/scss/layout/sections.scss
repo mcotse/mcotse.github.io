@@ -110,7 +110,7 @@
     font-size: 1.5em;
     padding-left: 10px;
     margin-top: 30px;
-    color: #373535;
+    color: $grey;
 
     li {
       display: inline;
@@ -118,12 +118,12 @@
       padding-right: 10px;
 
       a:link {
-        color: $black;
+        color: $grey;
         text-decoration: none;
       }
 
       a:visited {
-        color: $black;
+        color: $grey;
         text-decoration: none;
       }
 
@@ -133,7 +133,7 @@
       }
 
       a:active {
-        color: $black;
+        color: $grey;
         text-decoration: none;
       }
     }
@@ -141,6 +141,13 @@
   #contact {
     opacity: 0;
     display: none;
+  }
+  .nav {
+    display: none;
+    opacity: 0;
+  }
+  .letter, .letter-lifted, .letter--black, .letter-lifted--black {
+    font-size: 3em;
   }
 }
 
