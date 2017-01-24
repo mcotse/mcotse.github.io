@@ -57,8 +57,9 @@
     @extend .subsection;
 
     @include pic-bg("../images/contact-bg.jpg");
-    background-size: 105%;
-    background-position: 48% 62%;
+    background-size: cover;
+    // background-size: 105%;
+    // background-position: 48% 62%;
   }
 }
 .flex-3{

@@ -464,8 +464,7 @@ a {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    background-size: 105%;
-    background-position: 48% 62%; }
+    background-size: cover; }
 
 .flex-3 {
   flex-grow: 3; }
