@@ -30,8 +30,8 @@
     @extend .subsection;
 
     background-color: $primary-color;
-    @include pic-bg("../images/aboutbg.jpg");
-    background-position: 80% 60%;
+    @include pic-bg("../images/about-bg.jpg");
+    background-position: 0% 33%;
   }
 
   &-orange {
@@ -50,13 +50,15 @@
     @extend .subsection;
 
     background-color: $grey;
-    @include pic-bg("../images/herobg.jpg");
+    @include pic-bg("../images/hero-bg.jpg");
   }
 
   &-contact {
     @extend .subsection;
 
     @include pic-bg("../images/contact-bg.jpg");
+    background-size: 105%;
+    background-position: 48% 62%;
   }
 }
 .flex-3{

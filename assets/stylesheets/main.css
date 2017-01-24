@@ -441,19 +441,19 @@ a {
     background-color: white; }
   .subsection-about {
     background-color: #0085CA;
-    background: url("../images/aboutbg.jpg") no-repeat center center;
+    background: url("../images/about-bg.jpg") no-repeat center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    background-position: 80% 60%; }
+    background-position: 0% 33%; }
   .subsection-orange {
     background-color: #9068be; }
   .subsection-grey {
     background-color: #e1e8f0; }
   .subsection-hero {
     background-color: #e1e8f0;
-    background: url("../images/herobg.jpg") no-repeat center center;
+    background: url("../images/hero-bg.jpg") no-repeat center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -463,7 +463,9 @@ a {
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover; }
+    background-size: cover;
+    background-size: 105%;
+    background-position: 48% 62%; }
 
 .flex-3 {
   flex-grow: 3; }
