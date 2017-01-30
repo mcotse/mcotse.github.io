@@ -10,6 +10,10 @@
   background: url("../images/blurred/gestur.jpg");
 }
 
+#ramsay {
+  background: url("../images/blurred/ramsay.jpg");
+}
+
 #uwparkingbot {
   background: url("../images/blurred/uwparkingbot.jpg");
 }
@@ -18,7 +22,7 @@
   background: url("../images/blurred/scout.jpg");
 }
 
-#watchr, #scout, #uwparkingbot, #findit, #gestur {
+#watchr, #scout, #uwparkingbot, #findit, #gestur, #ramsay {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -68,7 +72,7 @@
 }
 
 @media all and (max-width: 600px){
-  #watchr, #scout, #uwparkingbot, #findit, #gestur {
+  #watchr, #scout, #uwparkingbot, #findit, #gestur, #ramsay {
     flex-grow: 1;
     display: flex;
     flex-direction: column;

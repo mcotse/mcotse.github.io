@@ -547,13 +547,16 @@ a {
 #gestur {
   background: url("../images/blurred/gestur.jpg"); }
 
+#ramsay {
+  background: url("../images/blurred/ramsay.jpg"); }
+
 #uwparkingbot {
   background: url("../images/blurred/uwparkingbot.jpg"); }
 
 #scout {
   background: url("../images/blurred/scout.jpg"); }
 
-#watchr, #scout, #uwparkingbot, #findit, #gestur {
+#watchr, #scout, #uwparkingbot, #findit, #gestur, #ramsay {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -561,44 +564,44 @@ a {
   background-size: cover;
   transition: all .3s ease-in-out;
   background-position: 50% 50%; }
-  #watchr:hover, #scout:hover, #uwparkingbot:hover, #findit:hover, #gestur:hover {
+  #watchr:hover, #scout:hover, #uwparkingbot:hover, #findit:hover, #gestur:hover, #ramsay:hover {
     background-size: 110%; }
-    #watchr:hover .plink, #scout:hover .plink, #uwparkingbot:hover .plink, #findit:hover .plink, #gestur:hover .plink {
+    #watchr:hover .plink, #scout:hover .plink, #uwparkingbot:hover .plink, #findit:hover .plink, #gestur:hover .plink, #ramsay:hover .plink {
       opacity: 100; }
-  #watchr .work-title, #scout .work-title, #uwparkingbot .work-title, #findit .work-title, #gestur .work-title {
+  #watchr .work-title, #scout .work-title, #uwparkingbot .work-title, #findit .work-title, #gestur .work-title, #ramsay .work-title {
     color: #ffffff;
     font-weight: 900;
     font-size: 3.5em; }
-  #watchr .plink, #scout .plink, #uwparkingbot .plink, #findit .plink, #gestur .plink {
+  #watchr .plink, #scout .plink, #uwparkingbot .plink, #findit .plink, #gestur .plink, #ramsay .plink {
     display: inline-block;
     opacity: 0;
     -webkit-transition: opacity 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
     transition: opacity 0.3s cubic-bezier(0.02, 0.01, 0.47, 1); }
-    #watchr .plink a, #scout .plink a, #uwparkingbot .plink a, #findit .plink a, #gestur .plink a {
+    #watchr .plink a, #scout .plink a, #uwparkingbot .plink a, #findit .plink a, #gestur .plink a, #ramsay .plink a {
       display: inline-block;
       color: #ffffff;
       text-decoration: none; }
-  #watchr .tag-line, #scout .tag-line, #uwparkingbot .tag-line, #findit .tag-line, #gestur .tag-line {
+  #watchr .tag-line, #scout .tag-line, #uwparkingbot .tag-line, #findit .tag-line, #gestur .tag-line, #ramsay .tag-line {
     color: #ffffff;
     margin-bottom: 5px; }
 
 @media all and (max-width: 600px) {
-  #watchr, #scout, #uwparkingbot, #findit, #gestur {
+  #watchr, #scout, #uwparkingbot, #findit, #gestur, #ramsay {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     background-size: cover; }
-    #watchr .work-title, #scout .work-title, #uwparkingbot .work-title, #findit .work-title, #gestur .work-title {
+    #watchr .work-title, #scout .work-title, #uwparkingbot .work-title, #findit .work-title, #gestur .work-title, #ramsay .work-title {
       color: #ffffff;
       font-weight: 900;
       font-size: 2.4em; }
-    #watchr .plink, #scout .plink, #uwparkingbot .plink, #findit .plink, #gestur .plink {
+    #watchr .plink, #scout .plink, #uwparkingbot .plink, #findit .plink, #gestur .plink, #ramsay .plink {
       display: inline-block;
       opacity: 100; }
-      #watchr .plink a, #scout .plink a, #uwparkingbot .plink a, #findit .plink a, #gestur .plink a {
+      #watchr .plink a, #scout .plink a, #uwparkingbot .plink a, #findit .plink a, #gestur .plink a, #ramsay .plink a {
         display: inline-block;
         color: #ffffff; }
-    #watchr .tag-line, #scout .tag-line, #uwparkingbot .tag-line, #findit .tag-line, #gestur .tag-line {
+    #watchr .tag-line, #scout .tag-line, #uwparkingbot .tag-line, #findit .tag-line, #gestur .tag-line, #ramsay .tag-line {
       color: #ffffff;
       margin-bottom: 5px; } }
