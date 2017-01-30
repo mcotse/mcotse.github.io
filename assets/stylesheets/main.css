@@ -559,6 +559,7 @@ a {
   background: url("../images/blurred/scout.jpg"); }
 
 #watchr, #scout, #uwparkingbot, #findit, #gestur, #ramsay {
+  position: relative;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
