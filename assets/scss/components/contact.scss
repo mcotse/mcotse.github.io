@@ -1,14 +1,15 @@
 $icon-color: $black;
 $icon-color-hover: $white;
 $icon-dimension: 40px;
-$github: $black;
+$github: #6e5494;
 $facebook: #3b5998;
 $twitter: #55acee;
 $instagram: #125688;
 $linkedin: #007bb5;
+$snapchat: #fffc00;
 $transition: all 0.2s ease-in-out;
 
-$list: (facebook, $facebook) (github, $github) (instagram, $instagram) (linkedin, $linkedin);
+$list: (facebook, $facebook) (github, $github) (instagram, $instagram) (linkedin, $linkedin) (snapchat, $snapchat);
 
 @mixin social-background {
   @each $item, $color in $list {
@@ -44,7 +45,7 @@ $list: (facebook, $facebook) (github, $github) (instagram, $instagram) (linkedin
       list-style-type: none;
       display: inline-block;
       margin: 0 0 0 -10px;
-      pading: 0;
+      padding: 0;
 
       a {
         text-align: left;

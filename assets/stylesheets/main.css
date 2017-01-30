@@ -182,7 +182,7 @@ strong {
       list-style-type: none;
       display: inline-block;
       margin: 0 0 0 -10px;
-      pading: 0; }
+      padding: 0; }
       .contact .social li a {
         text-align: left;
         color: #444444; }
@@ -224,11 +224,13 @@ strong {
     .contact .social .facebook .fa:after {
       background: #3b5998; }
     .contact .social .github .fa:after {
-      background: #444444; }
+      background: #6e5494; }
     .contact .social .instagram .fa:after {
       background: #125688; }
     .contact .social .linkedin .fa:after {
       background: #007bb5; }
+    .contact .social .snapchat .fa:after {
+      background: #fffc00; }
 
 .subtitle {
   margin: 20px auto 20px auto;
