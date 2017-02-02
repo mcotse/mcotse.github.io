@@ -14,6 +14,11 @@ $(".contact-nav").click(function() {
         scrollTop: $("#contact").offset().top
     }, 700);
 });
+$(".arrow").click(function() {
+    $('html, body').animate({
+        scrollTop: $("#about").offset().top
+    }, 700);
+});
 
 $('[data-typer-targets]').typer()
 
