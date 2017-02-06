@@ -2,8 +2,12 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var browserSync = require('browser-sync');
 var flatmap = require('gulp-flatmap');
-var converter = require('sass-convert')
-var path = require('path')
+var converter = require('sass-convert');
+var path = require('path');
+var penthouse = require('penthouse');
+var cleanCSS = require('gulp-clean-css');
+var useref = require('gulp-useref');
+var fs = require('fs');
 var reload = browserSync.reload;
 
 gulp.task('sass', function() {
@@ -37,6 +41,23 @@ gulp.task('convert', function(){
         }))
         .pipe(gulp.dest('assets/scss/' + path.basename(dir.path)))
   ))
+});
+
+gulp.task('penthouse', function () {
+  penthouse({
+    url: 'http://matthewtse.xyz',
+    css: 'assets/stylesheets/main.css',
+    width: 1680,
+    height: 1050,
+    strict: false,
+    blockJSRequests: true
+  }, function (err, critical) {
+    if (err) {
+        throw err;
+    }
+    // var clean = new cleanCSS().minify(critical);
+    fs.writeFileSync('assets/stylesheets/critical.css', critical);
+  });
 });
 
 gulp.task('default',['serve']);
