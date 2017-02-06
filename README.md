@@ -1,4 +1,4 @@
-## New Personal website
-Work in progress...
+## Personal website of Matthew Tse
+Work in progress...:)
 
 `gulp / gulp serve` to build
