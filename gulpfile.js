@@ -6,7 +6,6 @@ var converter = require('sass-convert');
 var path = require('path');
 var penthouse = require('penthouse');
 var cleanCSS = require('gulp-clean-css');
-var useref = require('gulp-useref');
 var fs = require('fs');
 var reload = browserSync.reload;
 

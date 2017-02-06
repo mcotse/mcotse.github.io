@@ -12,6 +12,7 @@
     "gulp-ruby-sass": "^2.1.0",
     "gulp-sass": "^2.3.2",
     "path": "^0.12.7",
+    "penthouse": "^0.10.9",
     "sass-convert": "^0.5.2"
   },
   "scripts": {
