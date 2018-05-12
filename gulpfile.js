@@ -54,7 +54,7 @@ gulp.task('convert', function(){
 
 gulp.task('penthouse', function () {
   penthouse({
-    url: 'http://matthewtse.xyz',
+    url: 'http://mcotse.github.io',
     css: 'assets/stylesheets/main.css',
     width: 1680,
     height: 1050,
