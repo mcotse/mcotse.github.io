@@ -198,6 +198,105 @@ function CollapsibleList({ items, initialCount = 6 }) {
   );
 }
 
+function NumberedList({ items, initialCount = 4 }) {
+  const shuffled = useMemo(() => {
+    const arr = [...items];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }, [items]);
+  const [expanded, setExpanded] = useState(false);
+  const hiddenCount = Math.max(0, shuffled.length - initialCount);
+  const contentRef = useRef(null);
+  const [collapsedHeight, setCollapsedHeight] = useState(0);
+  const [fullHeight, setFullHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const children = contentRef.current.children;
+      let h = 0;
+      for (let i = 0; i < Math.min(initialCount, children.length); i++) {
+        h += children[i].offsetHeight;
+      }
+      setCollapsedHeight(h + 46);
+      setFullHeight(contentRef.current.scrollHeight + 46);
+    }
+  }, [shuffled, initialCount]);
+
+  return (
+    <div>
+      <div style={{ position: "relative" }}>
+        <div style={{
+          background: "#f5f3ee",
+          border: "1px solid #e8e5e0",
+          padding: "28px 28px 18px",
+          overflow: "hidden",
+          transition: "max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+          maxHeight: expanded ? fullHeight + "px" : collapsedHeight + "px",
+        }}>
+          <div ref={contentRef}>
+            {shuffled.map((text, i) => (
+              <div key={i} style={{
+                padding: "10px 0",
+                display: "flex",
+                alignItems: "baseline",
+                gap: 12,
+                ...(i > 0 && { borderTop: "1px solid #e0ddd7" }),
+              }}>
+                <span style={{ fontSize: 10, color: "#ccc", fontWeight: 600, letterSpacing: 1 }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span style={{ fontSize: 14, color: "#555", fontWeight: 300, lineHeight: 1.5 }}>{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        {!expanded && hiddenCount > 0 && (
+          <div style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 120,
+            background: "linear-gradient(to bottom, transparent, #faf9f6)",
+            pointerEvents: "none",
+            transition: "opacity 0.4s ease",
+          }} />
+        )}
+      </div>
+
+      {hiddenCount > 0 && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          style={{
+            marginTop: 12,
+            background: "none",
+            border: "none",
+            padding: "4px 0",
+            fontSize: 11,
+            letterSpacing: 0.5,
+            color: "#aaa",
+            cursor: "pointer",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 400,
+            transition: "color 0.2s",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+          onMouseEnter={e => e.currentTarget.style.color = "#777"}
+          onMouseLeave={e => e.currentTarget.style.color = "#aaa"}
+        >
+          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
+          {expanded ? "Show less" : `Show ${hiddenCount} more`}
+        </button>
+      )}
+    </div>
+  );
+}
+
 function CookCard({ title, note, vibe }) {
   return (
     <div style={{
@@ -222,6 +321,32 @@ export default function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [headerVisible, setHeaderVisible] = useState(true);
   const lastScrollY = useRef(0);
+
+  const consuming = useMemo(() => {
+    const items = [
+      { title: "Range Widely", author: "David Epstein", link: "https://davidepstein.substack.com/" },
+      { title: "More To That", author: "Lawrence Yeo", link: "https://moretothat.com/" },
+      { title: "Chinese Cooking Demystified", author: "", link: "https://www.youtube.com/@ChineseCookingDemystified" },
+      { title: "The Skip", author: "Nikhyl Singhal", link: "https://theskip.substack.com/" },
+      { title: "Alex Danco's Newsletter", author: "Alex Danco", link: "https://danco.substack.com/" },
+      { title: "ChefSteps", author: "", link: "https://www.chefsteps.com/" },
+      { title: "Wait But Why", author: "Tim Urban", link: "https://waitbutwhy.com" },
+      { title: "A Knight of the Seven Kingdoms", author: "HBO", link: "https://www.imdb.com/title/tt27497448/" },
+      { title: "Kurzgesagt", author: "", link: "https://www.youtube.com/@kurzgesagt" },
+      { title: "Jules Cooking", author: "", link: "" },
+      { title: "The Tim Ferriss Show", author: "Tim Ferriss", link: "https://tim.blog/podcast/" },
+      { title: "Mark Rober", author: "", link: "https://www.youtube.com/@MarkRober" },
+      { title: "Jujutsu Kaisen", author: "", link: "https://www.imdb.com/title/tt12343534/" },
+      { title: "One Piece", author: "", link: "https://onepiece.fandom.com/wiki/One_Piece_Wiki" },
+      { title: "Andrej Karpathy", author: "", link: "https://x.com/karpathy" },
+      { title: "Thariq", author: "", link: "https://x.com/trq212" },
+    ];
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    return items;
+  }, []);
 
   const interests = useMemo(() => {
     const items = [
@@ -278,11 +403,38 @@ export default function App() {
         id: n.id,
         el: document.getElementById(n.id),
       })).filter(s => s.el);
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const rect = sections[i].el.getBoundingClientRect();
-        if (rect.top <= 120) {
-          setActiveSection(sections[i].id);
-          break;
+
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollRatio = maxScroll > 0 ? currentY / maxScroll : 0;
+
+      // Near bottom of page: sections can't reach the top, so distribute
+      // the last ~30% of scroll across the remaining bottom sections
+      if (scrollRatio > 0.7) {
+        // Find the last section whose top has passed 120px (the "normal" pick)
+        let normalIdx = 0;
+        for (let i = sections.length - 1; i >= 0; i--) {
+          if (sections[i].el.getBoundingClientRect().top <= 120) {
+            normalIdx = i;
+            break;
+          }
+        }
+        // Count how many sections are below the normal pick
+        const remaining = sections.length - 1 - normalIdx;
+        if (remaining > 0) {
+          // Map 0.7–1.0 scroll ratio to those remaining sections
+          const subRatio = (scrollRatio - 0.7) / 0.3;
+          const offset = Math.min(Math.floor(subRatio * (remaining + 1)), remaining);
+          setActiveSection(sections[normalIdx + offset].id);
+        } else {
+          setActiveSection(sections[normalIdx].id);
+        }
+      } else {
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const rect = sections[i].el.getBoundingClientRect();
+          if (rect.top <= 120) {
+            setActiveSection(sections[i].id);
+            break;
+          }
         }
       }
     };
@@ -532,7 +684,7 @@ export default function App() {
         {/* ─── WHAT I'VE BUILT ─── */}
         <section id="built" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
           <SectionLabel>What I've Built</SectionLabel>
-          <SectionTitle>The Back Catalog</SectionTitle>
+          <SectionTitle>In The Past</SectionTitle>
 
           <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#5b7fa4", fontWeight: 600 }}>
             In my career
@@ -572,6 +724,11 @@ export default function App() {
             description="Card counting practice tool. Because sometimes you want to build something that's fun and mathematically rigorous at the same time."
             accent="#2d8a4e"
           />
+          <ProjectCard
+            title="Memoryworthy"
+            description="A daily journaling app inspired by Storyworthy by Matthew Dicks. I jot down one story-worthy moment each day and get to look back on a life well-noticed."
+            accent="#2d8a4e"
+          />
         </section>
 
         <div style={{ height: 48 }} />
@@ -580,32 +737,18 @@ export default function App() {
         {/* ─── WHAT I WANT TO BUILD ─── */}
         <section id="someday" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
           <SectionLabel>What I Want to Build</SectionLabel>
-          <SectionTitle>The Someday List</SectionTitle>
-          <div style={{
-            background: "#f5f3ee",
-            border: "1px solid #e8e5e0",
-            padding: "28px 28px 18px",
-          }}>
-            <div style={{
-              padding: "10px 0",
-              display: "flex",
-              alignItems: "baseline",
-              gap: 12,
-            }}>
-              <span style={{ fontSize: 10, color: "#ccc", fontWeight: 600, letterSpacing: 1 }}>01</span>
-              <span style={{ fontSize: 14, color: "#555", fontWeight: 300, lineHeight: 1.5 }}>This someday list</span>
-            </div>
-            <div style={{
-              padding: "10px 0",
-              borderTop: "1px solid #e0ddd7",
-              display: "flex",
-              alignItems: "baseline",
-              gap: 12,
-            }}>
-              <span style={{ fontSize: 10, color: "#ccc", fontWeight: 600, letterSpacing: 1 }}>02</span>
-              <span style={{ fontSize: 14, color: "#555", fontWeight: 300, lineHeight: 1.5 }}>Blog</span>
-            </div>
-          </div>
+          <SectionTitle>One Day</SectionTitle>
+          <NumberedList items={[
+            "This someday list, but more trackable",
+            "Case studies for past projects",
+            "Projection mapping art onto my ceramics",
+            "Programmable wall piece with mechanical moving parts and a vision feedback loop",
+            "Porcelain steamer basket shaped like a bamboo steamer",
+            "AI sticker pack generator",
+            "Beli but for dishes instead of restaurants",
+            "A place to write and share my thoughts - and the content",
+            "Memoryworthy redesign",
+          ]} />
         </section>
 
         <div style={{ height: 48 }} />
@@ -613,25 +756,10 @@ export default function App() {
 
         {/* ─── CONSUMING ─── */}
         <section id="reading" style={{ padding: "0 clamp(24px, 5vw, 48px) 20px", maxWidth: 720, margin: "0 auto" }}>
-          <SectionLabel>Rot Queue</SectionLabel>
+          <SectionLabel>How I Spend My Time Rotting</SectionLabel>
           <SectionTitle>What I'm Consuming</SectionTitle>
 
-          <CollapsibleList items={[
-            { title: "Range Widely", author: "David Epstein", link: "https://davidepstein.substack.com/" },
-            { title: "More To That", author: "Lawrence Yeo", link: "https://moretothat.com/" },
-            { title: "Chinese Cooking Demystified", author: "", link: "https://www.youtube.com/@ChineseCookingDemystified" },
-            { title: "The Skip", author: "Nikhyl Singhal", link: "https://theskip.substack.com/" },
-            { title: "Alex Danco's Newsletter", author: "Alex Danco", link: "https://danco.substack.com/" },
-            { title: "ChefSteps", author: "", link: "https://www.chefsteps.com/" },
-            { title: "Wait But Why", author: "Tim Urban", link: "https://waitbutwhy.com" },
-            { title: "A Knight of the Seven Kingdoms", author: "HBO", link: "https://www.imdb.com/title/tt27497448/" },
-            { title: "Kurzgesagt", author: "", link: "https://www.youtube.com/@kurzgesagt" },
-            { title: "Jules Cooking", author: "", link: "" },
-            { title: "The Tim Ferriss Show", author: "Tim Ferriss", link: "https://tim.blog/podcast/" },
-            { title: "Mark Rober", author: "", link: "https://www.youtube.com/@MarkRober" },
-            { title: "Jujutsu Kaisen", author: "", link: "https://www.imdb.com/title/tt12343534/" },
-            { title: "One Piece", author: "", link: "https://onepiece.fandom.com/wiki/One_Piece_Wiki" },
-          ]} />
+          <CollapsibleList items={consuming} />
         </section>
 
         <div style={{ height: 48 }} />
@@ -640,7 +768,7 @@ export default function App() {
         {/* ─── INTERESTS ─── */}
         <section id="interests" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
           <SectionLabel>Miscellany</SectionLabel>
-          <SectionTitle>Things I Like</SectionTitle>
+          <SectionTitle>Things I Adore</SectionTitle>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
             {interests.map((item, i) => {
