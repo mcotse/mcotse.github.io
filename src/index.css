@@ -39,6 +39,17 @@ html, body {
   filter: brightness(1.15);
 }
 
+/* ── In-progress dot glow ── */
+@keyframes dotGlow {
+  0%, 100% { box-shadow: 0 0 3px 1px currentColor; transform: scale(1); }
+  50%      { box-shadow: 0 0 6px 2px currentColor; transform: scale(0.5); }
+}
+
+.dot-glow {
+  animation: dotGlow 3s ease-in-out infinite;
+  animation-delay: calc(var(--glow-delay, 0) * 1s);
+}
+
 /* ── +1 float animation ── */
 @keyframes floatUp {
   0%   { opacity: 1; transform: translateY(0); }

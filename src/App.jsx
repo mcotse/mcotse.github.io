@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Agentation } from "agentation";
 
 const NAV_ITEMS = [
@@ -43,7 +43,7 @@ function Divider() {
   return <div style={{ height: 1, background: "#e8e5e0", margin: "56px 0" }} />;
 }
 
-function ProjectCard({ title, description, accent, status }) {
+function ProjectCard({ title, description, accent, status, glow }) {
   return (
     <div
       style={{
@@ -55,7 +55,7 @@ function ProjectCard({ title, description, accent, status }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-            {accent && <div style={{ width: 8, height: 8, borderRadius: "50%", background: accent, flexShrink: 0 }} />}
+            {accent && <div className={glow ? "dot-glow" : undefined} style={{ width: 5.5, height: 5.5, borderRadius: "50%", background: accent, color: accent, flexShrink: 0, "--glow-delay": glow ? Math.random() * 3 : undefined }} />}
             <h3 style={{
               fontSize: 18,
               fontWeight: 500,
@@ -90,6 +90,52 @@ function ProjectCard({ title, description, accent, status }) {
         )}
       </div>
     </div>
+  );
+}
+
+function FadeOverlay({ visible }) {
+  if (!visible) return null;
+  return (
+    <div style={{
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 120,
+      background: "linear-gradient(to bottom, transparent, #faf9f6)",
+      pointerEvents: "none",
+      transition: "opacity 0.4s ease",
+    }} />
+  );
+}
+
+function ExpandButton({ expanded, hiddenCount, onClick }) {
+  if (hiddenCount <= 0) return null;
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        marginTop: 12,
+        background: "none",
+        border: "none",
+        padding: "4px 0",
+        fontSize: 11,
+        letterSpacing: 0.5,
+        color: "#aaa",
+        cursor: "pointer",
+        fontFamily: "'DM Sans', sans-serif",
+        fontWeight: 400,
+        transition: "color 0.2s",
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+      }}
+      onMouseEnter={e => e.currentTarget.style.color = "#777"}
+      onMouseLeave={e => e.currentTarget.style.color = "#aaa"}
+    >
+      <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
+      {expanded ? "Show less" : `Show ${hiddenCount} more`}
+    </button>
   );
 }
 
@@ -155,46 +201,10 @@ function CollapsibleList({ items, initialCount = 6 }) {
           );
           })}
         </div>
-        {!expanded && hiddenCount > 0 && (
-          <div style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 120,
-            background: "linear-gradient(to bottom, transparent, #faf9f6)",
-            pointerEvents: "none",
-            transition: "opacity 0.4s ease",
-          }} />
-        )}
+        <FadeOverlay visible={!expanded && hiddenCount > 0} />
       </div>
 
-      {hiddenCount > 0 && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          style={{
-            marginTop: 12,
-            background: "none",
-            border: "none",
-            padding: "4px 0",
-            fontSize: 11,
-            letterSpacing: 0.5,
-            color: "#aaa",
-            cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: 400,
-            transition: "color 0.2s",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = "#777"}
-          onMouseLeave={e => e.currentTarget.style.color = "#aaa"}
-        >
-          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
-          {expanded ? "Show less" : `Show ${hiddenCount} more`}
-        </button>
-      )}
+      <ExpandButton expanded={expanded} hiddenCount={hiddenCount} onClick={() => setExpanded(!expanded)} />
     </div>
   );
 }
@@ -212,39 +222,46 @@ function NumberedList({ items, initialCount = 4 }) {
   const [floats, setFloats] = useState([]);
   const hiddenCount = Math.max(0, shuffled.length - initialCount);
   const contentRef = useRef(null);
+  const containerRef = useRef(null);
   const [collapsedHeight, setCollapsedHeight] = useState(0);
-  const [fullHeight, setFullHeight] = useState(0);
+  const [expandedHeight, setExpandedHeight] = useState(0);
+  const floatTimers = useRef([]);
 
   const spawnFloat = (rowIndex) => {
     haptic();
     const id = Date.now() + Math.random();
     const offsetX = Math.round(Math.random() * 30 - 15);
     setFloats(prev => [...prev, { id, row: rowIndex, offsetX }]);
-    setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 800);
+    const tid = setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 800);
+    floatTimers.current.push(tid);
   };
 
   useEffect(() => {
-    if (contentRef.current) {
+    return () => floatTimers.current.forEach(clearTimeout);
+  }, []);
+
+  useEffect(() => {
+    if (contentRef.current && containerRef.current) {
       const children = contentRef.current.children;
       let h = 0;
       for (let i = 0; i < Math.min(initialCount, children.length); i++) {
         h += children[i].offsetHeight;
       }
       setCollapsedHeight(h + 46);
-      setFullHeight(contentRef.current.scrollHeight + 46);
+      setExpandedHeight(containerRef.current.scrollHeight);
     }
   }, [shuffled, initialCount]);
 
   return (
     <div>
       <div style={{ position: "relative" }}>
-        <div style={{
+        <div ref={containerRef} style={{
           background: "#f5f3ee",
           border: "1px solid #e8e5e0",
           padding: "28px 28px 18px",
           overflow: "hidden",
           transition: "max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-          maxHeight: expanded ? fullHeight + "px" : collapsedHeight + "px",
+          maxHeight: expanded ? expandedHeight + "px" : collapsedHeight + "px",
         }}>
           <div ref={contentRef}>
             {shuffled.map((text, i) => (
@@ -282,46 +299,10 @@ function NumberedList({ items, initialCount = 4 }) {
             ))}
           </div>
         </div>
-        {!expanded && hiddenCount > 0 && (
-          <div style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 120,
-            background: "linear-gradient(to bottom, transparent, #faf9f6)",
-            pointerEvents: "none",
-            transition: "opacity 0.4s ease",
-          }} />
-        )}
+        <FadeOverlay visible={!expanded && hiddenCount > 0} />
       </div>
 
-      {hiddenCount > 0 && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          style={{
-            marginTop: 12,
-            background: "none",
-            border: "none",
-            padding: "4px 0",
-            fontSize: 11,
-            letterSpacing: 0.5,
-            color: "#aaa",
-            cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: 400,
-            transition: "color 0.2s",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = "#777"}
-          onMouseLeave={e => e.currentTarget.style.color = "#aaa"}
-        >
-          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
-          {expanded ? "Show less" : `Show ${hiddenCount} more`}
-        </button>
-      )}
+      <ExpandButton expanded={expanded} hiddenCount={hiddenCount} onClick={() => setExpanded(!expanded)} />
     </div>
   );
 }
@@ -332,17 +313,17 @@ function CollapsibleCards({ children, initialCount = 2 }) {
   const hiddenCount = Math.max(0, items.length - initialCount);
   const contentRef = useRef(null);
   const [collapsedHeight, setCollapsedHeight] = useState(0);
-  const [fullHeight, setFullHeight] = useState(0);
+  const [expandedHeight, setExpandedHeight] = useState(0);
 
   useEffect(() => {
     if (contentRef.current) {
-      const children = contentRef.current.children;
+      const ch = contentRef.current.children;
       let h = 0;
-      for (let i = 0; i < Math.min(initialCount, children.length); i++) {
-        h += children[i].offsetHeight;
+      for (let i = 0; i < Math.min(initialCount, ch.length); i++) {
+        h += ch[i].offsetHeight;
       }
       setCollapsedHeight(h);
-      setFullHeight(contentRef.current.scrollHeight);
+      setExpandedHeight(contentRef.current.scrollHeight);
     }
   }, [initialCount]);
 
@@ -352,52 +333,16 @@ function CollapsibleCards({ children, initialCount = 2 }) {
         <div style={{
           overflow: "hidden",
           transition: "max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-          maxHeight: expanded ? fullHeight + "px" : collapsedHeight + "px",
+          maxHeight: expanded ? expandedHeight + "px" : collapsedHeight + "px",
         }}>
           <div ref={contentRef}>
             {items}
           </div>
         </div>
-        {!expanded && hiddenCount > 0 && (
-          <div style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 120,
-            background: "linear-gradient(to bottom, transparent, #faf9f6)",
-            pointerEvents: "none",
-            transition: "opacity 0.4s ease",
-          }} />
-        )}
+        <FadeOverlay visible={!expanded && hiddenCount > 0} />
       </div>
 
-      {hiddenCount > 0 && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          style={{
-            marginTop: 12,
-            background: "none",
-            border: "none",
-            padding: "4px 0",
-            fontSize: 11,
-            letterSpacing: 0.5,
-            color: "#aaa",
-            cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: 400,
-            transition: "color 0.2s",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = "#777"}
-          onMouseLeave={e => e.currentTarget.style.color = "#aaa"}
-        >
-          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
-          {expanded ? "Show less" : `Show ${hiddenCount} more`}
-        </button>
-      )}
+      <ExpandButton expanded={expanded} hiddenCount={hiddenCount} onClick={() => setExpanded(!expanded)} />
     </div>
   );
 }
@@ -429,7 +374,22 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [headerVisible, setHeaderVisible] = useState(true);
+  const [interestFloats, setInterestFloats] = useState([]);
   const lastScrollY = useRef(0);
+  const interestFloatTimers = useRef([]);
+
+  const spawnInterestFloat = (index) => {
+    haptic();
+    const id = Date.now() + Math.random();
+    const offsetX = Math.round(Math.random() * 20 - 10);
+    setInterestFloats(prev => [...prev, { id, index, offsetX }]);
+    const tid = setTimeout(() => setInterestFloats(prev => prev.filter(f => f.id !== id)), 800);
+    interestFloatTimers.current.push(tid);
+  };
+
+  useEffect(() => {
+    return () => interestFloatTimers.current.forEach(clearTimeout);
+  }, []);
 
   // Global haptic feedback on any link or button click
   useEffect(() => {
@@ -482,6 +442,13 @@ export default function App() {
       { text: "food science" },
       { text: "badminton" },
       { text: "poker" },
+      { text: "fine dining" },
+      { text: "street food" },
+      { text: "foraging" },
+      { text: "gaming" },
+      { text: "cantonese soups" },
+      { text: "uni" },
+      { text: "pickles" },
     ];
     // Fisher-Yates shuffle
     for (let i = items.length - 1; i > 0; i--) {
@@ -728,7 +695,7 @@ export default function App() {
             fontWeight: 300,
             margin: 0,
           }}>
-            Hi, I'm Matt :)<br /><br />I like to build things, cook for friends and family, and tinker with whatever catches my attention next.
+            Hi, I'm Matt :)<br /><br />I like to build cool things, cook for friends and family, and tinker with whatever catches my attention next.
           </p>
 
           {/* Quick facts - Swiss grid */}
@@ -782,15 +749,17 @@ export default function App() {
             At Headway
           </div>
           <ProjectCard
-            title="CLENGE"
-            description="Chief Vibe Officer - leading the client engagement team behind the core tools 90K+ providers use daily - home, calendar, telehealth, and patient outcome measures."
+            title="Clenge"
+            description={<>Chief Vibe Officer - leading the <u>CL</u>ient <u>ENG</u>ag<u>E</u>ment team behind the core tools 90K+ providers use daily - home, calendar, telehealth, messaging, and patient outcome measures.</>}
             accent="#5b7fa4"
+            glow
           />
           <div className="redacted-card">
             <ProjectCard
               title={<span className="redacted-shimmer">▓▓▓▓▓</span>}
-              description="Building Headway's in-house cloud agent - plugged into everything to help every team move faster toward making mental healthcare accessible for everyone."
+              description="Building Headway's in-house cloud agent - plugged into everything to help every team move faster towards making mental healthcare accessible for everyone."
               accent="#5b7fa4"
+              glow
             />
           </div>
 
@@ -802,11 +771,13 @@ export default function App() {
             title="Crunchtime"
             description="Started as a bet among friends to get a six-pack in a couple of months. Turned into an app that serves as a coordination and commitment device for us to push each other to be healthier."
             accent="#2d8a4e"
+            glow
           />
           <ProjectCard
             title="Fermentation Sleeve"
             description="Modular, aesthetic 3d-printed sleeves for Weck 905 jars - designed for long ferments like miso and fish sauce."
             accent="#2d8a4e"
+            glow
           />
         </section>
 
@@ -829,12 +800,12 @@ export default function App() {
             />
             <ProjectCard
               title="Credit Karma"
-              description="Led daily credit score updates infra revamp, built Identity Monitoring and Credit Lock from scratch, and started the Canadian internship program scaling from 0 to ~15 interns/quarter."
+              description="Led credit score refresh infra revamp that supported 100M+ members refreshes daily, built Identity Monitoring and Credit Lock from scratch, and started the Canadian internship program scaling from 0 to ~15 interns/quarter."
               accent="#5b7fa4"
             />
             <ProjectCard
               title="The Coterie"
-              description="Built our server-driven UI to decouple content from our iOS app releases, shipped legal document signing flows."
+              description="Built our server-driven UI to decouple content from our iOS app releases."
               accent="#5b7fa4"
             />
             <ProjectCard
@@ -850,18 +821,18 @@ export default function App() {
           </div>
           <CollapsibleCards initialCount={2}>
             <ProjectCard
-              title="Yuki Dashboard"
-              description="A dashboard for tracking our dog Yuki's meds, meals, and daily routines - so my wife, our dog sitters, and I are always on the same page."
+              title="pupdash"
+              description="A dashboard for logging and tracking our puppy Yuki's meds, meals, and daily routines - so my wife, our dog sitters, and I are always on the same page. User based, synced to cloud."
               accent="#2d8a4e"
             />
             <ProjectCard
-              title="Blackjack Trainer"
-              description="Card counting practice tool. Because sometimes you want to build something that's fun and mathematically rigorous at the same time."
+              title="Blackjack GTO"
+              description="Guides noobs to play 21 optimally - whipped up during casino night at a friend's, idea → design → implementation → deployment → live - entirely through my agent on my phone via Discord for orchestration."
               accent="#2d8a4e"
             />
             <ProjectCard
               title="Memoryworthy"
-              description="A daily journaling app inspired by Storyworthy by Matthew Dicks. I jot down one story-worthy moment each day and get to look back on a life well-noticed."
+              description="A daily journaling app inspired by Storyworthy by Matthew Dicks. Helps me pause and appreciate at least one moment of the day that is memoryworthy."
               accent="#2d8a4e"
             />
           </CollapsibleCards>
@@ -921,11 +892,27 @@ export default function App() {
                 fontStyle: "normal",
                 letterSpacing: 0.3,
                 border,
+                cursor: "pointer",
+                position: "relative",
+                overflow: "visible",
+                textDecoration: "none",
               };
+              const floatSpans = interestFloats.filter(f => f.index === i).map(f => (
+                <span key={f.id} style={{
+                  position: "absolute",
+                  right: 4 + f.offsetX,
+                  top: -4,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: item.highlight ? "#fff" : "#5b7fa4",
+                  pointerEvents: "none",
+                  animation: "floatUp 0.8s ease-out forwards",
+                }}>+1</span>
+              ));
               return item.link ? (
-                <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={{ ...style, textDecoration: "none", cursor: "pointer" }}>{item.text}</a>
+                <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={style} onClick={() => spawnInterestFloat(i)}>{item.text}{floatSpans}</a>
               ) : (
-                <span key={i} style={style}>{item.text}</span>
+                <span key={i} style={style} onClick={() => spawnInterestFloat(i)}>{item.text}{floatSpans}</span>
               );
             })}
           </div>
