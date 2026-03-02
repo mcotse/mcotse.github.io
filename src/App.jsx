@@ -43,17 +43,12 @@ function Divider() {
 }
 
 function ProjectCard({ title, description, accent, status }) {
-  const [hovered, setHovered] = useState(false);
   return (
     <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       style={{
         padding: "24px 0",
         borderBottom: "1px solid #e8e5e0",
         cursor: "default",
-        transition: "all 0.3s ease",
-        paddingLeft: hovered ? 8 : 0,
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
@@ -98,17 +93,12 @@ function ProjectCard({ title, description, accent, status }) {
 }
 
 function ReadingItem({ title, author }) {
-  const [hovered, setHovered] = useState(false);
   return (
     <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       style={{
         padding: "10px 0",
         borderTop: "1px solid #e8e5e0",
         cursor: "default",
-        transition: "padding-left 0.3s ease",
-        paddingLeft: hovered ? 8 : 0,
       }}
     >
       <span style={{ fontSize: 15, fontWeight: 400, color: "#222", fontFamily: "'DM Sans', sans-serif" }}>{title}</span>
