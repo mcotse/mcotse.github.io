@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { Agentation } from "agentation";
 
 const NAV_ITEMS = [
   { id: "top", label: "Home" },
@@ -206,12 +207,21 @@ function NumberedList({ items, initialCount = 4 }) {
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
-  }, [items]);
+  }, []);
   const [expanded, setExpanded] = useState(false);
+  const [floats, setFloats] = useState([]);
   const hiddenCount = Math.max(0, shuffled.length - initialCount);
   const contentRef = useRef(null);
   const [collapsedHeight, setCollapsedHeight] = useState(0);
   const [fullHeight, setFullHeight] = useState(0);
+
+  const spawnFloat = (rowIndex) => {
+    haptic();
+    const id = Date.now() + Math.random();
+    const offsetX = Math.round(Math.random() * 30 - 15);
+    setFloats(prev => [...prev, { id, row: rowIndex, offsetX }]);
+    setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 800);
+  };
 
   useEffect(() => {
     if (contentRef.current) {
@@ -243,14 +253,109 @@ function NumberedList({ items, initialCount = 4 }) {
                 display: "flex",
                 alignItems: "baseline",
                 gap: 12,
+                cursor: "pointer",
+                position: "relative",
+                transition: "padding-left 0.3s ease",
                 ...(i > 0 && { borderTop: "1px solid #e0ddd7" }),
-              }}>
+              }}
+                onClick={() => spawnFloat(i)}
+                onMouseEnter={e => { e.currentTarget.style.paddingLeft = "8px"; }}
+                onMouseLeave={e => { e.currentTarget.style.paddingLeft = "0px"; }}
+              >
                 <span style={{ fontSize: 10, color: "#ccc", fontWeight: 600, letterSpacing: 1 }}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span style={{ fontSize: 14, color: "#555", fontWeight: 300, lineHeight: 1.5 }}>{text}</span>
+                {floats.filter(f => f.row === i).map(f => (
+                  <span key={f.id} style={{
+                    position: "absolute",
+                    right: 8 + f.offsetX,
+                    top: 0,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#5b7fa4",
+                    pointerEvents: "none",
+                    animation: "floatUp 0.8s ease-out forwards",
+                  }}>+1</span>
+                ))}
               </div>
             ))}
+          </div>
+        </div>
+        {!expanded && hiddenCount > 0 && (
+          <div style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 120,
+            background: "linear-gradient(to bottom, transparent, #faf9f6)",
+            pointerEvents: "none",
+            transition: "opacity 0.4s ease",
+          }} />
+        )}
+      </div>
+
+      {hiddenCount > 0 && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          style={{
+            marginTop: 12,
+            background: "none",
+            border: "none",
+            padding: "4px 0",
+            fontSize: 11,
+            letterSpacing: 0.5,
+            color: "#aaa",
+            cursor: "pointer",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 400,
+            transition: "color 0.2s",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+          onMouseEnter={e => e.currentTarget.style.color = "#777"}
+          onMouseLeave={e => e.currentTarget.style.color = "#aaa"}
+        >
+          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
+          {expanded ? "Show less" : `Show ${hiddenCount} more`}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function CollapsibleCards({ children, initialCount = 2 }) {
+  const [expanded, setExpanded] = useState(false);
+  const items = Array.isArray(children) ? children : [children];
+  const hiddenCount = Math.max(0, items.length - initialCount);
+  const contentRef = useRef(null);
+  const [collapsedHeight, setCollapsedHeight] = useState(0);
+  const [fullHeight, setFullHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const children = contentRef.current.children;
+      let h = 0;
+      for (let i = 0; i < Math.min(initialCount, children.length); i++) {
+        h += children[i].offsetHeight;
+      }
+      setCollapsedHeight(h);
+      setFullHeight(contentRef.current.scrollHeight);
+    }
+  }, [initialCount]);
+
+  return (
+    <div>
+      <div style={{ position: "relative" }}>
+        <div style={{
+          overflow: "hidden",
+          transition: "max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+          maxHeight: expanded ? fullHeight + "px" : collapsedHeight + "px",
+        }}>
+          <div ref={contentRef}>
+            {items}
           </div>
         </div>
         {!expanded && hiddenCount > 0 && (
@@ -314,6 +419,10 @@ function CookCard({ title, note, vibe }) {
   );
 }
 
+function haptic(ms = 8) {
+  if (navigator.vibrate) navigator.vibrate(ms);
+}
+
 export default function App() {
   const [activeSection, setActiveSection] = useState("top");
   const [scrolled, setScrolled] = useState(false);
@@ -321,6 +430,15 @@ export default function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [headerVisible, setHeaderVisible] = useState(true);
   const lastScrollY = useRef(0);
+
+  // Global haptic feedback on any link or button click
+  useEffect(() => {
+    const onClick = (e) => {
+      if (e.target.closest("a, button")) haptic();
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, []);
 
   const consuming = useMemo(() => {
     const items = [
@@ -464,7 +582,7 @@ export default function App() {
         zIndex: 100,
         background: scrolled ? "rgba(250,249,246,0.92)" : "#faf9f6",
         backdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: `1px solid ${scrolled ? "#e0ddd7" : "transparent"}`,
+        borderBottom: "none",
         transition: ["transform", "opacity", "background", "border-color", "backdrop-filter"].map(p => `${p} 0.35s cubic-bezier(0.4, 0, 0.2, 1)`).join(", "),
         padding: "14px clamp(24px, 5vw, 48px)",
         display: "flex",
@@ -528,6 +646,20 @@ export default function App() {
           </div>
         )}
       </nav>
+
+      {/* ─── NAV FADE SHADOW ─── */}
+      <div style={{
+        position: "fixed",
+        top: 48,
+        left: 0,
+        right: 0,
+        height: 40,
+        background: "linear-gradient(to bottom, rgba(250,249,246,0.92), transparent)",
+        pointerEvents: "none",
+        zIndex: 99,
+        opacity: scrolled ? 1 : 0,
+        transition: "opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+      }} />
 
       {/* ─── MOBILE MENU DROPDOWN ─── */}
       {isMobile && (
@@ -689,46 +821,50 @@ export default function App() {
           <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#5b7fa4", fontWeight: 600 }}>
             In my career
           </div>
-          <ProjectCard
-            title="The Coterie"
-            description="Built our server-driven UI to decouple content from our iOS app releases, shipped legal document signing flows."
-            accent="#5b7fa4"
-          />
-          <ProjectCard
-            title="Lyft"
-            description="Led location geocode snapping at Lyft Business concierge - drove ~$1M+ in yearly margin by reducing wait times and improving ride profitability."
-            accent="#5b7fa4"
-          />
-          <ProjectCard
-            title="Credit Karma"
-            description="Led daily credit score updates infra revamp, built Identity Monitoring and Credit Lock from scratch, and started the Canadian internship program scaling from 0 to ~15 interns/quarter."
-            accent="#5b7fa4"
-          />
-          <ProjectCard
-            title="University of Waterloo"
-            description="ECE with Entrepreneurial option. Won the GM Innovation Award for ModVR - a 3d modeling app built for VR (final year design project)."
-            accent="#5b7fa4"
-          />
+          <CollapsibleCards initialCount={2}>
+            <ProjectCard
+              title="Lyft"
+              description="Led location geocode snapping at Lyft Business concierge - drove ~$1M+ in yearly margin by reducing wait times and improving ride profitability."
+              accent="#5b7fa4"
+            />
+            <ProjectCard
+              title="Credit Karma"
+              description="Led daily credit score updates infra revamp, built Identity Monitoring and Credit Lock from scratch, and started the Canadian internship program scaling from 0 to ~15 interns/quarter."
+              accent="#5b7fa4"
+            />
+            <ProjectCard
+              title="The Coterie"
+              description="Built our server-driven UI to decouple content from our iOS app releases, shipped legal document signing flows."
+              accent="#5b7fa4"
+            />
+            <ProjectCard
+              title="University of Waterloo"
+              description="ECE with Entrepreneurial option. Won the GM Innovation Award for ModVR - a 3d modeling app built for VR (final year design project)."
+              accent="#5b7fa4"
+            />
+          </CollapsibleCards>
 
           <div style={{ height: 32 }} />
           <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#2d8a4e", fontWeight: 600 }}>
             For Myself
           </div>
-          <ProjectCard
-            title="Yuki Dashboard"
-            description="A dashboard for tracking our dog Yuki's meds, meals, and daily routines - so my wife, our dog sitters, and I are always on the same page."
-            accent="#2d8a4e"
-          />
-          <ProjectCard
-            title="Blackjack Trainer"
-            description="Card counting practice tool. Because sometimes you want to build something that's fun and mathematically rigorous at the same time."
-            accent="#2d8a4e"
-          />
-          <ProjectCard
-            title="Memoryworthy"
-            description="A daily journaling app inspired by Storyworthy by Matthew Dicks. I jot down one story-worthy moment each day and get to look back on a life well-noticed."
-            accent="#2d8a4e"
-          />
+          <CollapsibleCards initialCount={2}>
+            <ProjectCard
+              title="Yuki Dashboard"
+              description="A dashboard for tracking our dog Yuki's meds, meals, and daily routines - so my wife, our dog sitters, and I are always on the same page."
+              accent="#2d8a4e"
+            />
+            <ProjectCard
+              title="Blackjack Trainer"
+              description="Card counting practice tool. Because sometimes you want to build something that's fun and mathematically rigorous at the same time."
+              accent="#2d8a4e"
+            />
+            <ProjectCard
+              title="Memoryworthy"
+              description="A daily journaling app inspired by Storyworthy by Matthew Dicks. I jot down one story-worthy moment each day and get to look back on a life well-noticed."
+              accent="#2d8a4e"
+            />
+          </CollapsibleCards>
         </section>
 
         <div style={{ height: 48 }} />
@@ -836,6 +972,7 @@ export default function App() {
           </div>
         </footer>
       </div>
+      {process.env.NODE_ENV === "development" && <Agentation />}
     </div>
   );
 }
