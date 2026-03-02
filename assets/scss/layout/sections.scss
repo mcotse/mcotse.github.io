@@ -93,6 +93,7 @@
 @media all and (max-width: 600px) {
   .subsection-title {
     max-height: 20vh;
+    overflow: hidden;
   }
 
   .section-wrapper {
