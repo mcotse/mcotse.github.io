@@ -1,0 +1,10 @@
+/* TEAM */
+Name: Matthew Tse
+Role: Creator
+LinkedIn: https://www.linkedin.com/in/mcotse/
+Location: United States
+
+/* SITE */
+Built with: React, Vite
+Hosted on: Cloudflare Pages
+Language: English

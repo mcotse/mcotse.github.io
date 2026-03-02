@@ -1,0 +1,29 @@
+# Matthew Tse
+
+> Personal website of Matthew Tse — engineering leader, builder, and maker. Currently leading the Client Engagement engineering team at Headway.
+
+Matthew Tse is a software engineering leader at Headway, where he leads the Client Engagement (Clenge) team. Previously worked at Lyft (location geocode snapping, ~$1M+ yearly margin impact) and Credit Karma (credit score refresh infra for 100M+ members, Identity Monitoring, Credit Lock, and started the Canadian internship program). University of Waterloo ECE graduate, won the GM Innovation Award for ModVR.
+
+## Current Projects
+
+- Building at Headway: Leading the Client Engagement team and an AI agent project
+- Crunchtime: Fitness coordination app among friends
+- Fermentation Sleeve: 3D-printed fermentation jar sleeves
+
+## Past Work
+
+- Lyft: Led location geocode snapping at Lyft Business concierge
+- Credit Karma: Led credit score refresh infra revamp, built Identity Monitoring and Credit Lock
+- The Coterie: Built server-driven UI for iOS app
+- pupdash: Dashboard for tracking puppy routines
+- Blackjack GTO: Optimal blackjack play guide
+- Memoryworthy: Daily journaling app inspired by Storyworthy
+
+## Interests
+
+Ceramics, AI agents, fermentation, snowboarding, 3D printing, weightlifting, kombucha, digital art, food science, badminton, poker, fine dining, street food, foraging, cantonese soups
+
+## Links
+
+- [LinkedIn](https://www.linkedin.com/in/mcotse/): Professional profile
+- [Instagram](https://www.instagram.com/yukipomsky/): Yuki the Pomsky
