@@ -76,7 +76,6 @@ function ProjectCard({ title, description, accent, status }) {
             margin: "0 0 10px",
             fontFamily: "'DM Sans', sans-serif",
             fontWeight: 300,
-            maxWidth: 520,
             paddingLeft: accent ? 18 : 0,
           }}>{description}</p>}
 
@@ -125,12 +124,13 @@ function CollapsibleList({ items, initialCount = 6 }) {
 
   return (
     <div>
-      <div style={{
-        overflow: "hidden",
-        transition: "max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-        maxHeight: expanded ? items.length * 60 + "px" : initialCount * 60 + "px",
-      }}>
-        {items.map((item, i) => {
+      <div style={{ position: "relative" }}>
+        <div style={{
+          overflow: "hidden",
+          transition: "max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+          maxHeight: expanded ? items.length * 60 + "px" : initialCount * 60 + "px",
+        }}>
+          {items.map((item, i) => {
           const inner = (
             <>
               <span style={{ fontSize: 17, fontWeight: 500, color: "#222", fontFamily: "'DM Sans', sans-serif" }}>{item.title}</span>
@@ -162,7 +162,20 @@ function CollapsibleList({ items, initialCount = 6 }) {
               {inner}
             </div>
           );
-        })}
+          })}
+        </div>
+        {!expanded && hiddenCount > 0 && (
+          <div style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 60,
+            background: "linear-gradient(to bottom, transparent, #faf9f6)",
+            pointerEvents: "none",
+            transition: "opacity 0.4s ease",
+          }} />
+        )}
       </div>
 
       {hiddenCount > 0 && (
@@ -218,13 +231,32 @@ function CookCard({ title, note, vibe }) {
 export default function App() {
   const [activeSection, setActiveSection] = useState("top");
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+  const [headerVisible, setHeaderVisible] = useState(true);
   const containerRef = useRef(null);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const handleScroll = () => {
-      setScrolled(el.scrollTop > 40);
+      const currentY = el.scrollTop;
+      setScrolled(currentY > 40);
+
+      // Hide/show header on mobile based on scroll direction
+      const delta = currentY - lastScrollY.current;
+      if (Math.abs(delta) > 10) {
+        setHeaderVisible(delta < 0 || currentY < 40);
+        lastScrollY.current = currentY;
+      }
+
       const sections = NAV_ITEMS.map(n => ({
         id: n.id,
         el: document.getElementById(n.id),
@@ -263,11 +295,15 @@ export default function App() {
         background: scrolled ? "rgba(250,249,246,0.92)" : "#faf9f6",
         backdropFilter: scrolled ? "blur(12px)" : "none",
         borderBottom: `1px solid ${scrolled ? "#e0ddd7" : "transparent"}`,
-        transition: "all 0.3s ease",
+        transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
         padding: "14px clamp(24px, 5vw, 48px)",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        ...(isMobile && {
+          transform: (headerVisible || menuOpen) ? "translateY(0)" : "translateY(-100%)",
+          opacity: (headerVisible || menuOpen) ? 1 : 0,
+        }),
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 28, height: 3, background: "#5b7fa4" }} />
@@ -279,35 +315,98 @@ export default function App() {
             color: "#333",
           }}>Matthew Tse</span>
         </div>
-        <div style={{ display: "flex", gap: 28 }}>
-          {NAV_ITEMS.map(n => (
-            <button
-              key={n.id}
-              onClick={() => scrollTo(n.id)}
-              style={{
-                fontSize: 12,
-                letterSpacing: 1,
-                color: activeSection === n.id ? "#111" : "#aaa",
-                fontWeight: activeSection === n.id ? 600 : 400,
-                cursor: "pointer",
-                background: "none",
-                border: "none",
-                fontFamily: "inherit",
-                padding: 0,
-                transition: "color 0.2s",
-                borderBottom: activeSection === n.id ? "1.5px solid #5b7fa4" : "1.5px solid transparent",
-                paddingBottom: 2,
-              }}
-            >{n.label}</button>
-          ))}
-        </div>
+        {isMobile ? (
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 4,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
+            <div style={{ width: 20, height: 1.5, background: "#333", transition: "all 0.3s", transform: menuOpen ? "rotate(45deg) translate(2.75px, 2.75px)" : "none" }} />
+            <div style={{ width: 20, height: 1.5, background: "#333", transition: "all 0.3s", opacity: menuOpen ? 0 : 1 }} />
+            <div style={{ width: 20, height: 1.5, background: "#333", transition: "all 0.3s", transform: menuOpen ? "rotate(-45deg) translate(2.75px, -2.75px)" : "none" }} />
+          </button>
+        ) : (
+          <div style={{ display: "flex", gap: 28 }}>
+            {NAV_ITEMS.map(n => (
+              <button
+                key={n.id}
+                onClick={() => scrollTo(n.id)}
+                style={{
+                  fontSize: 12,
+                  letterSpacing: 1,
+                  color: activeSection === n.id ? "#111" : "#aaa",
+                  fontWeight: activeSection === n.id ? 600 : 400,
+                  cursor: "pointer",
+                  background: "none",
+                  border: "none",
+                  fontFamily: "inherit",
+                  padding: 0,
+                  transition: "color 0.2s",
+                  borderBottom: activeSection === n.id ? "1.5px solid #5b7fa4" : "1.5px solid transparent",
+                  paddingBottom: 2,
+                }}
+              >{n.label}</button>
+            ))}
+          </div>
+        )}
       </nav>
+
+      {/* ─── MOBILE MENU DROPDOWN ─── */}
+      {isMobile && (
+        <div style={{
+          position: "fixed",
+          top: 48,
+          left: 0,
+          right: 0,
+          zIndex: 99,
+          background: "rgba(250,249,246,0.97)",
+          backdropFilter: "blur(12px)",
+          borderBottom: menuOpen ? "1px solid #e0ddd7" : "1px solid transparent",
+          overflow: "hidden",
+          maxHeight: menuOpen ? 400 : 0,
+          transition: "max-height 0.3s ease, border-color 0.3s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+          transform: headerVisible ? "translateY(0)" : "translateY(-100%)",
+          opacity: headerVisible ? 1 : 0,
+        }}>
+          <div style={{ padding: "12px clamp(24px, 5vw, 48px) 20px", display: "flex", flexDirection: "column", gap: 4 }}>
+            {NAV_ITEMS.map(n => (
+              <button
+                key={n.id}
+                onClick={() => { scrollTo(n.id); setMenuOpen(false); }}
+                style={{
+                  fontSize: 14,
+                  letterSpacing: 1,
+                  color: activeSection === n.id ? "#111" : "#999",
+                  fontWeight: activeSection === n.id ? 600 : 400,
+                  cursor: "pointer",
+                  background: "none",
+                  border: "none",
+                  fontFamily: "inherit",
+                  padding: "10px 0",
+                  textAlign: "left",
+                  transition: "color 0.2s",
+                  borderLeft: activeSection === n.id ? "2px solid #5b7fa4" : "2px solid transparent",
+                  paddingLeft: 12,
+                }}
+              >{n.label}</button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ─── SCROLLABLE CONTENT ─── */}
       <div ref={containerRef} style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
 
         {/* ─── HERO ─── */}
-        <section id="top" style={{ padding: "80px clamp(24px, 5vw, 48px) 40px", maxWidth: 860, margin: "0 auto" }}>
+        <section id="top" style={{ padding: "80px clamp(24px, 5vw, 48px) 40px", maxWidth: 720, margin: "0 auto" }}>
           <h1 style={{
             fontSize: "clamp(36px, 7vw, 56px)",
             fontWeight: 400,
@@ -325,7 +424,6 @@ export default function App() {
             lineHeight: 1.85,
             color: "#666",
             fontWeight: 300,
-            maxWidth: 540,
             margin: 0,
           }}>
             Hi, I'm Matt :)<br /><br />I like to build things, cook for friends and family, and tinker with whatever catches my attention next.
@@ -374,7 +472,7 @@ export default function App() {
 
 
         {/* ─── WHAT I'M BUILDING ─── */}
-        <section id="building" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 860, margin: "0 auto" }}>
+        <section id="building" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
           <SectionLabel>What I'm Building</SectionLabel>
           <SectionTitle>In Progress</SectionTitle>
 
@@ -412,7 +510,7 @@ export default function App() {
 
 
         {/* ─── WHAT I'VE BUILT ─── */}
-        <section id="built" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 860, margin: "0 auto" }}>
+        <section id="built" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
           <SectionLabel>What I've Built</SectionLabel>
           <SectionTitle>The Back Catalog</SectionTitle>
 
@@ -460,7 +558,7 @@ export default function App() {
 
 
         {/* ─── WHAT I WANT TO BUILD ─── */}
-        <section id="someday" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 860, margin: "0 auto" }}>
+        <section id="someday" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
           <SectionLabel>What I Want to Build</SectionLabel>
           <SectionTitle>The Someday List</SectionTitle>
           <div style={{
@@ -494,7 +592,7 @@ export default function App() {
 
 
         {/* ─── CONSUMING ─── */}
-        <section id="reading" style={{ padding: "0 clamp(24px, 5vw, 48px) 20px", maxWidth: 860, margin: "0 auto" }}>
+        <section id="reading" style={{ padding: "0 clamp(24px, 5vw, 48px) 20px", maxWidth: 720, margin: "0 auto" }}>
           <SectionLabel>Rot Queue</SectionLabel>
           <SectionTitle>What I'm Consuming</SectionTitle>
 
@@ -520,7 +618,7 @@ export default function App() {
 
 
         {/* ─── INTERESTS ─── */}
-        <section id="interests" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 860, margin: "0 auto" }}>
+        <section id="interests" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
           <SectionLabel>Miscellany</SectionLabel>
           <SectionTitle>Things I Like</SectionTitle>
 
@@ -577,14 +675,15 @@ export default function App() {
         {/* ─── FOOTER ─── */}
         <footer style={{
           borderTop: "1px solid #e8e5e0",
-          margin: "40px clamp(24px, 5vw, 48px) 0",
+          padding: "32px clamp(24px, 5vw, 48px) 48px",
           maxWidth: 860,
           marginLeft: "auto",
           marginRight: "auto",
-          padding: "32px 0 48px",
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "flex-end",
+          gap: 20,
         }}>
           <div>
             <div style={{ width: 28, height: 3, background: "#5b7fa4", marginBottom: 12 }} />
