@@ -229,7 +229,6 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [headerVisible, setHeaderVisible] = useState(true);
-  const containerRef = useRef(null);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -239,10 +238,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
     const handleScroll = () => {
-      const currentY = el.scrollTop;
+      const currentY = window.scrollY;
       setScrolled(currentY > 40);
 
       // Hide/show header on mobile based on scroll direction
@@ -256,17 +253,16 @@ export default function App() {
         id: n.id,
         el: document.getElementById(n.id),
       })).filter(s => s.el);
-      const containerTop = el.getBoundingClientRect().top;
       for (let i = sections.length - 1; i >= 0; i--) {
         const rect = sections[i].el.getBoundingClientRect();
-        if (rect.top - containerTop <= 120) {
+        if (rect.top <= 120) {
           setActiveSection(sections[i].id);
           break;
         }
       }
     };
-    el.addEventListener("scroll", handleScroll);
-    return () => el.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollTo = (id) => {
@@ -276,7 +272,7 @@ export default function App() {
 
   return (
     <div style={{
-      height: "100vh",
+      minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
       background: "#faf9f6",
@@ -284,13 +280,15 @@ export default function App() {
     }}>
       {/* ─── FIXED NAV ─── */}
       <nav style={{
-        position: "sticky",
+        position: isMobile ? "fixed" : "sticky",
         top: 0,
+        left: 0,
+        right: 0,
         zIndex: 100,
         background: scrolled ? "rgba(250,249,246,0.92)" : "#faf9f6",
         backdropFilter: scrolled ? "blur(12px)" : "none",
         borderBottom: `1px solid ${scrolled ? "#e0ddd7" : "transparent"}`,
-        transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
         padding: "14px clamp(24px, 5vw, 48px)",
         display: "flex",
         justifyContent: "space-between",
@@ -398,7 +396,7 @@ export default function App() {
       )}
 
       {/* ─── SCROLLABLE CONTENT ─── */}
-      <div ref={containerRef} style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+      <div style={{ flex: 1, ...(isMobile && { paddingTop: 48 }) }}>
 
         {/* ─── HERO ─── */}
         <section id="top" style={{ padding: "80px clamp(24px, 5vw, 48px) 40px", maxWidth: 720, margin: "0 auto" }}>
@@ -479,11 +477,13 @@ export default function App() {
             description="Chief Vibe Officer - leading the client engagement team behind the core tools 90K+ providers use daily - home, calendar, telehealth, and patient outcome measures."
             accent="#5b7fa4"
           />
-          <ProjectCard
-            title="▓▓▓▓▓"
-            description="Building Headway's in-house cloud agent - plugged into everything to help every team move faster toward making mental healthcare accessible for everyone."
-            accent="#5b7fa4"
-          />
+          <div className="redacted-card">
+            <ProjectCard
+              title={<span className="redacted-shimmer">▓▓▓▓▓</span>}
+              description="Building Headway's in-house cloud agent - plugged into everything to help every team move faster toward making mental healthcare accessible for everyone."
+              accent="#5b7fa4"
+            />
+          </div>
 
           <div style={{ height: 32 }} />
           <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#2d8a4e", fontWeight: 600 }}>

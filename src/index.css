@@ -10,3 +10,31 @@ html, body {
   background: #faf9f6;
   overflow-x: hidden;
 }
+
+/* ── Redacted title shimmer ── */
+@keyframes redacted-shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.redacted-shimmer {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    #111 0%,
+    #111 38%,
+    #3a5570 50%,
+    #111 62%,
+    #111 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: redacted-shimmer 8s cubic-bezier(0.85, 0, 0.15, 1) infinite alternate;
+  letter-spacing: -0.5px;
+}
+
+.redacted-card:hover .redacted-shimmer {
+  filter: brightness(1.15);
+}
