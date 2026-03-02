@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 const NAV_ITEMS = [
   { id: "top", label: "Home" },
@@ -104,15 +104,15 @@ function ReadingItem({ title, author }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        padding: "16px 0",
+        padding: "10px 0",
         borderTop: "1px solid #e8e5e0",
         cursor: "default",
         transition: "padding-left 0.3s ease",
         paddingLeft: hovered ? 8 : 0,
       }}
     >
-      <span style={{ fontSize: 17, fontWeight: 500, color: "#222", fontFamily: "'DM Sans', sans-serif" }}>{title}</span>
-      {author && <span style={{ fontSize: 14, color: "#aaa", fontWeight: 300, fontFamily: "'DM Sans', sans-serif" }}> - {author}</span>}
+      <span style={{ fontSize: 15, fontWeight: 400, color: "#222", fontFamily: "'DM Sans', sans-serif" }}>{title}</span>
+      {author && <span style={{ fontSize: 13, color: "#aaa", fontWeight: 300, fontFamily: "'DM Sans', sans-serif" }}> - {author}</span>}
     </div>
   );
 }
@@ -128,13 +128,13 @@ function CollapsibleList({ items, initialCount = 6 }) {
         <div style={{
           overflow: "hidden",
           transition: "max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-          maxHeight: expanded ? items.length * 60 + "px" : initialCount * 60 + "px",
+          maxHeight: expanded ? items.length * 42 + "px" : initialCount * 42 + "px",
         }}>
           {items.map((item, i) => {
           const inner = (
             <>
-              <span style={{ fontSize: 17, fontWeight: 500, color: "#222", fontFamily: "'DM Sans', sans-serif" }}>{item.title}</span>
-              {item.author && <span style={{ fontSize: 14, color: "#aaa", fontWeight: 300, fontFamily: "'DM Sans', sans-serif" }}> - {item.author}</span>}
+              <span style={{ fontSize: 15, fontWeight: 400, color: "#222", fontFamily: "'DM Sans', sans-serif" }}>{item.title}</span>
+              {item.author && <span style={{ fontSize: 13, color: "#aaa", fontWeight: 300, fontFamily: "'DM Sans', sans-serif" }}> - {item.author}</span>}
               {item.link && (
                 <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#5b7fa4" strokeWidth="1.5" style={{ marginLeft: 8, opacity: 0.6, transition: "opacity 0.2s", verticalAlign: "middle" }}><path d="M3 9L9 3M9 3H4M9 3v5" /></svg>
               )}
@@ -148,7 +148,7 @@ function CollapsibleList({ items, initialCount = 6 }) {
               rel="noopener noreferrer"
               style={{
                 display: "block",
-                padding: "16px 0",
+                padding: "10px 0",
                 borderTop: "1px solid #e8e5e0",
                 textDecoration: "none",
                 cursor: "pointer",
@@ -158,7 +158,7 @@ function CollapsibleList({ items, initialCount = 6 }) {
               onMouseLeave={e => { e.currentTarget.style.paddingLeft = "0px"; }}
             >{inner}</a>
           ) : (
-            <div key={i} style={{ padding: "16px 0", borderTop: "1px solid #e8e5e0" }}>
+            <div key={i} style={{ padding: "10px 0", borderTop: "1px solid #e8e5e0" }}>
               {inner}
             </div>
           );
@@ -170,7 +170,7 @@ function CollapsibleList({ items, initialCount = 6 }) {
             bottom: 0,
             left: 0,
             right: 0,
-            height: 60,
+            height: 120,
             background: "linear-gradient(to bottom, transparent, #faf9f6)",
             pointerEvents: "none",
             transition: "opacity 0.4s ease",
@@ -182,23 +182,25 @@ function CollapsibleList({ items, initialCount = 6 }) {
         <button
           onClick={() => setExpanded(!expanded)}
           style={{
-            marginTop: 16,
+            marginTop: 12,
             background: "none",
-            border: "1px solid #e0ddd7",
-            padding: "8px 20px",
-            fontSize: 12,
-            letterSpacing: 1,
-            color: "#888",
+            border: "none",
+            padding: "4px 0",
+            fontSize: 11,
+            letterSpacing: 0.5,
+            color: "#aaa",
             cursor: "pointer",
             fontFamily: "'DM Sans', sans-serif",
-            fontWeight: 500,
-            transition: "all 0.2s",
+            fontWeight: 400,
+            transition: "color 0.2s",
             display: "flex",
             alignItems: "center",
-            gap: 8,
+            gap: 6,
           }}
+          onMouseEnter={e => e.currentTarget.style.color = "#777"}
+          onMouseLeave={e => e.currentTarget.style.color = "#aaa"}
         >
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#888" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
+          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
           {expanded ? "Show less" : `Show ${hiddenCount} more`}
         </button>
       )}
@@ -230,6 +232,39 @@ export default function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [headerVisible, setHeaderVisible] = useState(true);
   const lastScrollY = useRef(0);
+
+  const interests = useMemo(() => {
+    const items = [
+      { text: "ceramics" },
+      { text: "agents" },
+      { text: "yukipomsky", link: "https://www.instagram.com/yukipomsky/" },
+      { text: "fermentation" },
+      { text: "snowboarding" },
+      { text: "3d printing" },
+      { text: "hainanese chicken" },
+      { text: "claude" },
+      { text: "weightlifting" },
+      { text: "kombucha" },
+      { text: "digital art" },
+      { text: "food science" },
+      { text: "badminton" },
+      { text: "poker" },
+    ];
+    // Fisher-Yates shuffle
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    // Random number of highlights (2-4), randomly assigned dark or blue
+    const count = 2 + Math.floor(Math.random() * 3);
+    const indices = new Set();
+    while (indices.size < count) indices.add(Math.floor(Math.random() * items.length));
+    const colors = ["#3d3d3d", "#5b7fa4"];
+    return items.map((item, i) => ({
+      ...item,
+      highlight: indices.has(i) ? colors[Math.floor(Math.random() * colors.length)] : null,
+    }));
+  }, []);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 640);
@@ -280,7 +315,7 @@ export default function App() {
     }}>
       {/* ─── FIXED NAV ─── */}
       <nav style={{
-        position: isMobile ? "fixed" : "sticky",
+        position: "fixed",
         top: 0,
         left: 0,
         right: 0,
@@ -288,7 +323,7 @@ export default function App() {
         background: scrolled ? "rgba(250,249,246,0.92)" : "#faf9f6",
         backdropFilter: scrolled ? "blur(12px)" : "none",
         borderBottom: `1px solid ${scrolled ? "#e0ddd7" : "transparent"}`,
-        transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: ["transform", "opacity", "background", "border-color", "backdrop-filter"].map(p => `${p} 0.35s cubic-bezier(0.4, 0, 0.2, 1)`).join(", "),
         padding: "14px clamp(24px, 5vw, 48px)",
         display: "flex",
         justifyContent: "space-between",
@@ -396,7 +431,7 @@ export default function App() {
       )}
 
       {/* ─── SCROLLABLE CONTENT ─── */}
-      <div style={{ flex: 1, ...(isMobile && { paddingTop: 48 }) }}>
+      <div style={{ flex: 1, paddingTop: 48 }}>
 
         {/* ─── HERO ─── */}
         <section id="top" style={{ padding: "80px clamp(24px, 5vw, 48px) 40px", maxWidth: 720, margin: "0 auto" }}>
@@ -618,50 +653,27 @@ export default function App() {
           <SectionTitle>Things I Like</SectionTitle>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
-            {[
-              { text: "ceramics" },
-              { text: "agents" },
-              { text: "yukipomsky", link: "https://www.instagram.com/yukipomsky/" },
-              { text: "fermentation" },
-              { text: "snowboarding" },
-              { text: "3d printing" },
-              { text: "hainanese chicken" },
-              { text: "claude" },
-              { text: "weightlifting" },
-              { text: "kombucha" },
-              { text: "digital art" },
-              { text: "food science" },
-              { text: "badminton" },
-              { text: "poker" },
-            ].map((item, i) => (
-              item.link ? (
-                <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={{
-                  padding: "8px 16px",
-                  background: i % 7 === 0 ? "#3d3d3d" : i % 5 === 0 ? "#5b7fa4" : "#f5f3ee",
-                  color: (i % 7 === 0 || i % 5 === 0) ? "#fff" : "#555",
-                  fontSize: 13,
-                  fontWeight: 400,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontStyle: "normal",
-                  letterSpacing: 0.3,
-                  border: (i % 7 === 0 || i % 5 === 0) ? "none" : "1px solid #e0ddd7",
-                  textDecoration: "none",
-                  cursor: "pointer",
-                }}>{item.text}</a>
+            {interests.map((item, i) => {
+              const bg = item.highlight || "#f5f3ee";
+              const fg = item.highlight ? "#fff" : "#555";
+              const border = item.highlight ? "none" : "1px solid #e0ddd7";
+              const style = {
+                padding: "8px 16px",
+                background: bg,
+                color: fg,
+                fontSize: 13,
+                fontWeight: 400,
+                fontFamily: "'DM Sans', sans-serif",
+                fontStyle: "normal",
+                letterSpacing: 0.3,
+                border,
+              };
+              return item.link ? (
+                <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={{ ...style, textDecoration: "none", cursor: "pointer" }}>{item.text}</a>
               ) : (
-                <span key={i} style={{
-                  padding: "8px 16px",
-                  background: i % 7 === 0 ? "#3d3d3d" : i % 5 === 0 ? "#5b7fa4" : "#f5f3ee",
-                  color: (i % 7 === 0 || i % 5 === 0) ? "#fff" : "#555",
-                  fontSize: 13,
-                  fontWeight: 400,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontStyle: "normal",
-                  letterSpacing: 0.3,
-                  border: (i % 7 === 0 || i % 5 === 0) ? "none" : "1px solid #e0ddd7",
-                }}>{item.text}</span>
-              )
-            ))}
+                <span key={i} style={style}>{item.text}</span>
+              );
+            })}
           </div>
         </section>
 

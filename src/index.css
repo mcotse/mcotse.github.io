@@ -13,8 +13,8 @@ html, body {
 
 /* ── Redacted title shimmer ── */
 @keyframes redacted-shimmer {
-  0% { background-position: 200% center; }
-  100% { background-position: -200% center; }
+  0%   { background-position: 100% center; }
+  100% { background-position: 0% center; }
 }
 
 .redacted-shimmer {
@@ -31,7 +31,7 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: redacted-shimmer 8s cubic-bezier(0.85, 0, 0.15, 1) infinite alternate;
+  animation: redacted-shimmer 5s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
   letter-spacing: -0.5px;
 }
 
