@@ -136,7 +136,7 @@ function CollapsibleList({ items, initialCount = 6 }) {
               <span style={{ fontSize: 17, fontWeight: 500, color: "#222", fontFamily: "'DM Sans', sans-serif" }}>{item.title}</span>
               {item.author && <span style={{ fontSize: 14, color: "#aaa", fontWeight: 300, fontFamily: "'DM Sans', sans-serif" }}> - {item.author}</span>}
               {item.link && (
-                <span style={{ fontSize: 11, color: "#5b7fa4", marginLeft: 8, opacity: 0.6, transition: "opacity 0.2s" }}>↗</span>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#5b7fa4" strokeWidth="1.5" style={{ marginLeft: 8, opacity: 0.6, transition: "opacity 0.2s", verticalAlign: "middle" }}><path d="M3 9L9 3M9 3H4M9 3v5" /></svg>
               )}
             </>
           );
@@ -198,12 +198,7 @@ function CollapsibleList({ items, initialCount = 6 }) {
             gap: 8,
           }}
         >
-          <span style={{
-            display: "inline-block",
-            transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-            fontSize: 10,
-          }}>▼</span>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#888" strokeWidth="1.5" style={{ display: "inline-block", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}><path d="M2 4l4 4 4-4" /></svg>
           {expanded ? "Show less" : `Show ${hiddenCount} more`}
         </button>
       )}
@@ -534,7 +529,7 @@ export default function App() {
           />
           <ProjectCard
             title="University of Waterloo"
-            description="ECE with Entrepreneurial option. Won the GM Innovation Award for ModVR - a 3d modeling app built for VR (4th year design project, 2017)."
+            description="ECE with Entrepreneurial option. Won the GM Innovation Award for ModVR - a 3d modeling app built for VR (final year design project)."
             accent="#5b7fa4"
           />
 
