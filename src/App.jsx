@@ -624,7 +624,7 @@ export default function App() {
         background: "linear-gradient(to bottom, rgba(250,249,246,0.92), transparent)",
         pointerEvents: "none",
         zIndex: 99,
-        opacity: scrolled ? 1 : 0,
+        opacity: (scrolled && (!isMobile || headerVisible || menuOpen)) ? 1 : 0,
         transition: "opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
       }} />
 
