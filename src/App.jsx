@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Agentation } from "agentation";
 
-const NAV_ITEMS = [
-  { id: "top", label: "Home" },
+const TAB_ITEMS = [
   { id: "building", label: "Building" },
   { id: "built", label: "Built" },
   { id: "someday", label: "Someday" },
@@ -369,13 +368,10 @@ function haptic(ms = 8) {
 }
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState("top");
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("building");
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
-  const [headerVisible, setHeaderVisible] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [interestFloats, setInterestFloats] = useState([]);
-  const lastScrollY = useRef(0);
   const interestFloatTimers = useRef([]);
 
   const spawnInterestFloat = (index) => {
@@ -472,64 +468,10 @@ export default function App() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      setScrolled(currentY > 40);
-
-      // Hide/show header on mobile based on scroll direction
-      const delta = currentY - lastScrollY.current;
-      if (Math.abs(delta) > 10) {
-        setHeaderVisible(delta < 0 || currentY < 40);
-        lastScrollY.current = currentY;
-      }
-
-      const sections = NAV_ITEMS.map(n => ({
-        id: n.id,
-        el: document.getElementById(n.id),
-      })).filter(s => s.el);
-
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollRatio = maxScroll > 0 ? currentY / maxScroll : 0;
-
-      // Near bottom of page: sections can't reach the top, so distribute
-      // the last ~30% of scroll across the remaining bottom sections
-      if (scrollRatio > 0.7) {
-        // Find the last section whose top has passed 120px (the "normal" pick)
-        let normalIdx = 0;
-        for (let i = sections.length - 1; i >= 0; i--) {
-          if (sections[i].el.getBoundingClientRect().top <= 120) {
-            normalIdx = i;
-            break;
-          }
-        }
-        // Count how many sections are below the normal pick
-        const remaining = sections.length - 1 - normalIdx;
-        if (remaining > 0) {
-          // Map 0.7–1.0 scroll ratio to those remaining sections
-          const subRatio = (scrollRatio - 0.7) / 0.3;
-          const offset = Math.min(Math.floor(subRatio * (remaining + 1)), remaining);
-          setActiveSection(sections[normalIdx + offset].id);
-        } else {
-          setActiveSection(sections[normalIdx].id);
-        }
-      } else {
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const rect = sections[i].el.getBoundingClientRect();
-          if (rect.top <= 120) {
-            setActiveSection(sections[i].id);
-            break;
-          }
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  const switchTab = (id) => {
+    setActiveTab(id);
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -547,18 +489,14 @@ export default function App() {
         left: 0,
         right: 0,
         zIndex: 100,
-        background: scrolled ? "rgba(250,249,246,0.92)" : "#faf9f6",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
+        background: "rgba(250,249,246,0.92)",
+        backdropFilter: "blur(12px)",
         borderBottom: "none",
-        transition: ["transform", "opacity", "background", "border-color", "backdrop-filter"].map(p => `${p} 0.35s cubic-bezier(0.4, 0, 0.2, 1)`).join(", "),
+        transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
         padding: "14px clamp(24px, 5vw, 48px)",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        ...(isMobile && {
-          transform: (headerVisible || menuOpen) ? "translateY(0)" : "translateY(-100%)",
-          opacity: (headerVisible || menuOpen) ? 1 : 0,
-        }),
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 28, height: 3, background: "#5b7fa4" }} />
@@ -590,22 +528,22 @@ export default function App() {
           </button>
         ) : (
           <div style={{ display: "flex", gap: 28 }}>
-            {NAV_ITEMS.map(n => (
+            {TAB_ITEMS.map(n => (
               <button
                 key={n.id}
-                onClick={() => scrollTo(n.id)}
+                onClick={() => switchTab(n.id)}
                 style={{
                   fontSize: 12,
                   letterSpacing: 1,
-                  color: activeSection === n.id ? "#111" : "#aaa",
-                  fontWeight: activeSection === n.id ? 600 : 400,
+                  color: activeTab === n.id ? "#111" : "#aaa",
+                  fontWeight: activeTab === n.id ? 600 : 400,
                   cursor: "pointer",
                   background: "none",
                   border: "none",
                   fontFamily: "inherit",
                   padding: 0,
                   transition: "color 0.2s",
-                  borderBottom: activeSection === n.id ? "1.5px solid #5b7fa4" : "1.5px solid transparent",
+                  borderBottom: activeTab === n.id ? "1.5px solid #5b7fa4" : "1.5px solid transparent",
                   paddingBottom: 2,
                 }}
               >{n.label}</button>
@@ -613,20 +551,6 @@ export default function App() {
           </div>
         )}
       </nav>
-
-      {/* ─── NAV FADE SHADOW ─── */}
-      <div style={{
-        position: "fixed",
-        top: 48,
-        left: 0,
-        right: 0,
-        height: 40,
-        background: "linear-gradient(to bottom, rgba(250,249,246,0.92), transparent)",
-        pointerEvents: "none",
-        zIndex: 99,
-        opacity: (scrolled && (!isMobile || headerVisible || menuOpen)) ? 1 : 0,
-        transition: "opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-      }} />
 
       {/* ─── MOBILE MENU DROPDOWN ─── */}
       {isMobile && (
@@ -641,20 +565,18 @@ export default function App() {
           borderBottom: menuOpen ? "1px solid #e0ddd7" : "1px solid transparent",
           overflow: "hidden",
           maxHeight: menuOpen ? 400 : 0,
-          transition: "max-height 0.3s ease, border-color 0.3s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-          transform: headerVisible ? "translateY(0)" : "translateY(-100%)",
-          opacity: headerVisible ? 1 : 0,
+          transition: "max-height 0.3s ease, border-color 0.3s ease",
         }}>
           <div style={{ padding: "12px clamp(24px, 5vw, 48px) 20px", display: "flex", flexDirection: "column", gap: 4 }}>
-            {NAV_ITEMS.map(n => (
+            {TAB_ITEMS.map(n => (
               <button
                 key={n.id}
-                onClick={() => { scrollTo(n.id); setMenuOpen(false); }}
+                onClick={() => switchTab(n.id)}
                 style={{
                   fontSize: 14,
                   letterSpacing: 1,
-                  color: activeSection === n.id ? "#111" : "#999",
-                  fontWeight: activeSection === n.id ? 600 : 400,
+                  color: activeTab === n.id ? "#111" : "#999",
+                  fontWeight: activeTab === n.id ? 600 : 400,
                   cursor: "pointer",
                   background: "none",
                   border: "none",
@@ -662,7 +584,7 @@ export default function App() {
                   padding: "10px 0",
                   textAlign: "left",
                   transition: "color 0.2s",
-                  borderLeft: activeSection === n.id ? "2px solid #5b7fa4" : "2px solid transparent",
+                  borderLeft: activeTab === n.id ? "2px solid #5b7fa4" : "2px solid transparent",
                   paddingLeft: 12,
                 }}
               >{n.label}</button>
@@ -671,11 +593,11 @@ export default function App() {
         </div>
       )}
 
-      {/* ─── SCROLLABLE CONTENT ─── */}
+      {/* ─── PAGE CONTENT ─── */}
       <div style={{ flex: 1, paddingTop: 48 }}>
 
-        {/* ─── HERO ─── */}
-        <section id="top" style={{ padding: "80px clamp(24px, 5vw, 48px) 40px", maxWidth: 720, margin: "0 auto" }}>
+        {/* ─── HERO (always visible) ─── */}
+        <section style={{ padding: "80px clamp(24px, 5vw, 48px) 40px", maxWidth: 720, margin: "0 auto" }}>
           <h1 style={{
             fontSize: "clamp(36px, 7vw, 56px)",
             fontWeight: 400,
@@ -737,186 +659,179 @@ export default function App() {
           </div>
         </section>
 
-        <div style={{ height: 48 }} />
+        {/* ─── TAB CONTENT ─── */}
+        <div style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
 
+          {activeTab === "building" && (
+            <section>
+              <SectionLabel>What I'm Building</SectionLabel>
+              <SectionTitle>In Progress</SectionTitle>
 
-        {/* ─── WHAT I'M BUILDING ─── */}
-        <section id="building" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
-          <SectionLabel>What I'm Building</SectionLabel>
-          <SectionTitle>In Progress</SectionTitle>
+              <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#5b7fa4", fontWeight: 600 }}>
+                At Headway
+              </div>
+              <ProjectCard
+                title="Clenge"
+                description={<>Chief Vibe Officer - leading the <u>CL</u>ient <u>ENG</u>ag<u>E</u>ment team behind the core tools 90K+ providers use daily - home, calendar, telehealth, messaging, and patient outcome measures.</>}
+                accent="#5b7fa4"
+                glow
+              />
+              <div className="redacted-card">
+                <ProjectCard
+                  title={<span className="redacted-shimmer">▓▓▓▓▓</span>}
+                  description="Building Headway's in-house cloud agent - plugged into everything to help every team move faster towards making mental healthcare accessible for everyone."
+                  accent="#5b7fa4"
+                  glow
+                />
+              </div>
 
-          <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#5b7fa4", fontWeight: 600 }}>
-            At Headway
-          </div>
-          <ProjectCard
-            title="Clenge"
-            description={<>Chief Vibe Officer - leading the <u>CL</u>ient <u>ENG</u>ag<u>E</u>ment team behind the core tools 90K+ providers use daily - home, calendar, telehealth, messaging, and patient outcome measures.</>}
-            accent="#5b7fa4"
-            glow
-          />
-          <div className="redacted-card">
-            <ProjectCard
-              title={<span className="redacted-shimmer">▓▓▓▓▓</span>}
-              description="Building Headway's in-house cloud agent - plugged into everything to help every team move faster towards making mental healthcare accessible for everyone."
-              accent="#5b7fa4"
-              glow
-            />
-          </div>
+              <div style={{ height: 32 }} />
+              <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#2d8a4e", fontWeight: 600 }}>
+                For Myself
+              </div>
+              <ProjectCard
+                title="Crunchtime"
+                description="Started as a bet among friends to get a six-pack in a couple of months. Turned into an app that serves as a coordination and commitment device for us to push each other to be healthier."
+                accent="#2d8a4e"
+                glow
+              />
+              <ProjectCard
+                title="Fermentation Sleeve"
+                description="Modular, aesthetic 3d-printed sleeves for Weck 905 jars - designed for long ferments like miso and fish sauce."
+                accent="#2d8a4e"
+                glow
+              />
+            </section>
+          )}
 
-          <div style={{ height: 32 }} />
-          <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#2d8a4e", fontWeight: 600 }}>
-            For Myself
-          </div>
-          <ProjectCard
-            title="Crunchtime"
-            description="Started as a bet among friends to get a six-pack in a couple of months. Turned into an app that serves as a coordination and commitment device for us to push each other to be healthier."
-            accent="#2d8a4e"
-            glow
-          />
-          <ProjectCard
-            title="Fermentation Sleeve"
-            description="Modular, aesthetic 3d-printed sleeves for Weck 905 jars - designed for long ferments like miso and fish sauce."
-            accent="#2d8a4e"
-            glow
-          />
-        </section>
+          {activeTab === "built" && (
+            <section>
+              <SectionLabel>What I've Built</SectionLabel>
+              <SectionTitle>In The Past</SectionTitle>
 
-        <div style={{ height: 48 }} />
+              <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#5b7fa4", fontWeight: 600 }}>
+                In my career
+              </div>
+              <CollapsibleCards initialCount={2}>
+                <ProjectCard
+                  title="Lyft"
+                  description="Led location geocode snapping at Lyft Business concierge - drove ~$1M+ in yearly margin by reducing wait times and improving ride profitability."
+                  accent="#5b7fa4"
+                />
+                <ProjectCard
+                  title="Credit Karma"
+                  description="Led credit score refresh infra revamp that supported 100M+ members refreshes daily, built Identity Monitoring and Credit Lock from scratch, and started the Canadian internship program scaling from 0 to ~15 interns/quarter."
+                  accent="#5b7fa4"
+                />
+                <ProjectCard
+                  title="The Coterie"
+                  description="Built our server-driven UI to decouple content from our iOS app releases."
+                  accent="#5b7fa4"
+                />
+                <ProjectCard
+                  title="University of Waterloo"
+                  description="ECE with Entrepreneurial option. Won the GM Innovation Award for ModVR - a 3d modeling app built for VR (final year design project)."
+                  accent="#5b7fa4"
+                />
+              </CollapsibleCards>
 
+              <div style={{ height: 32 }} />
+              <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#2d8a4e", fontWeight: 600 }}>
+                For Myself
+              </div>
+              <CollapsibleCards initialCount={2}>
+                <ProjectCard
+                  title="pupdash"
+                  description="A dashboard for logging and tracking our puppy Yuki's meds, meals, and daily routines - so my wife, our dog sitters, and I are always on the same page. User based, synced to cloud."
+                  accent="#2d8a4e"
+                />
+                <ProjectCard
+                  title="Blackjack GTO"
+                  description="Guides noobs to play 21 optimally - whipped up during casino night at a friend's, idea → design → implementation → deployment → live - entirely through my agent on my phone via Discord for orchestration."
+                  accent="#2d8a4e"
+                />
+                <ProjectCard
+                  title="Memoryworthy"
+                  description="A daily journaling app inspired by Storyworthy by Matthew Dicks. Helps me pause and appreciate at least one moment of the day that is memoryworthy."
+                  accent="#2d8a4e"
+                />
+              </CollapsibleCards>
+            </section>
+          )}
 
-        {/* ─── WHAT I'VE BUILT ─── */}
-        <section id="built" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
-          <SectionLabel>What I've Built</SectionLabel>
-          <SectionTitle>In The Past</SectionTitle>
+          {activeTab === "someday" && (
+            <section>
+              <SectionLabel>What I Want to Build</SectionLabel>
+              <SectionTitle>One Day</SectionTitle>
+              <NumberedList items={[
+                "This someday list, but more trackable",
+                "Case studies for past projects",
+                "Projection mapping art onto my ceramics",
+                "Programmable wall piece with mechanical moving parts and a vision feedback loop",
+                "Porcelain steamer basket shaped like a bamboo steamer",
+                "AI sticker pack generator",
+                "Beli but for dishes instead of restaurants",
+                "A place to write and share my thoughts - and the content",
+                "Memoryworthy redesign",
+              ]} />
+            </section>
+          )}
 
-          <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#5b7fa4", fontWeight: 600 }}>
-            In my career
-          </div>
-          <CollapsibleCards initialCount={2}>
-            <ProjectCard
-              title="Lyft"
-              description="Led location geocode snapping at Lyft Business concierge - drove ~$1M+ in yearly margin by reducing wait times and improving ride profitability."
-              accent="#5b7fa4"
-            />
-            <ProjectCard
-              title="Credit Karma"
-              description="Led credit score refresh infra revamp that supported 100M+ members refreshes daily, built Identity Monitoring and Credit Lock from scratch, and started the Canadian internship program scaling from 0 to ~15 interns/quarter."
-              accent="#5b7fa4"
-            />
-            <ProjectCard
-              title="The Coterie"
-              description="Built our server-driven UI to decouple content from our iOS app releases."
-              accent="#5b7fa4"
-            />
-            <ProjectCard
-              title="University of Waterloo"
-              description="ECE with Entrepreneurial option. Won the GM Innovation Award for ModVR - a 3d modeling app built for VR (final year design project)."
-              accent="#5b7fa4"
-            />
-          </CollapsibleCards>
+          {activeTab === "reading" && (
+            <section>
+              <SectionLabel>How I Spend My Time Rotting</SectionLabel>
+              <SectionTitle>What I'm Consuming</SectionTitle>
+              <CollapsibleList items={consuming} />
+            </section>
+          )}
 
-          <div style={{ height: 32 }} />
-          <div style={{ marginBottom: 10, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", color: "#2d8a4e", fontWeight: 600 }}>
-            For Myself
-          </div>
-          <CollapsibleCards initialCount={2}>
-            <ProjectCard
-              title="pupdash"
-              description="A dashboard for logging and tracking our puppy Yuki's meds, meals, and daily routines - so my wife, our dog sitters, and I are always on the same page. User based, synced to cloud."
-              accent="#2d8a4e"
-            />
-            <ProjectCard
-              title="Blackjack GTO"
-              description="Guides noobs to play 21 optimally - whipped up during casino night at a friend's, idea → design → implementation → deployment → live - entirely through my agent on my phone via Discord for orchestration."
-              accent="#2d8a4e"
-            />
-            <ProjectCard
-              title="Memoryworthy"
-              description="A daily journaling app inspired by Storyworthy by Matthew Dicks. Helps me pause and appreciate at least one moment of the day that is memoryworthy."
-              accent="#2d8a4e"
-            />
-          </CollapsibleCards>
-        </section>
+          {activeTab === "interests" && (
+            <section>
+              <SectionLabel>Miscellany</SectionLabel>
+              <SectionTitle>Things I Adore</SectionTitle>
 
-        <div style={{ height: 48 }} />
-
-
-        {/* ─── WHAT I WANT TO BUILD ─── */}
-        <section id="someday" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
-          <SectionLabel>What I Want to Build</SectionLabel>
-          <SectionTitle>One Day</SectionTitle>
-          <NumberedList items={[
-            "This someday list, but more trackable",
-            "Case studies for past projects",
-            "Projection mapping art onto my ceramics",
-            "Programmable wall piece with mechanical moving parts and a vision feedback loop",
-            "Porcelain steamer basket shaped like a bamboo steamer",
-            "AI sticker pack generator",
-            "Beli but for dishes instead of restaurants",
-            "A place to write and share my thoughts - and the content",
-            "Memoryworthy redesign",
-          ]} />
-        </section>
-
-        <div style={{ height: 48 }} />
-
-
-        {/* ─── CONSUMING ─── */}
-        <section id="reading" style={{ padding: "0 clamp(24px, 5vw, 48px) 20px", maxWidth: 720, margin: "0 auto" }}>
-          <SectionLabel>How I Spend My Time Rotting</SectionLabel>
-          <SectionTitle>What I'm Consuming</SectionTitle>
-
-          <CollapsibleList items={consuming} />
-        </section>
-
-        <div style={{ height: 48 }} />
-
-
-        {/* ─── INTERESTS ─── */}
-        <section id="interests" style={{ padding: "0 clamp(24px, 5vw, 48px)", maxWidth: 720, margin: "0 auto" }}>
-          <SectionLabel>Miscellany</SectionLabel>
-          <SectionTitle>Things I Adore</SectionTitle>
-
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
-            {interests.map((item, i) => {
-              const bg = item.highlight || "#f5f3ee";
-              const fg = item.highlight ? "#fff" : "#555";
-              const border = item.highlight ? "none" : "1px solid #e0ddd7";
-              const style = {
-                padding: "8px 16px",
-                background: bg,
-                color: fg,
-                fontSize: 13,
-                fontWeight: 400,
-                fontFamily: "'DM Sans', sans-serif",
-                fontStyle: "normal",
-                letterSpacing: 0.3,
-                border,
-                cursor: "pointer",
-                position: "relative",
-                overflow: "visible",
-                textDecoration: "none",
-              };
-              const floatSpans = interestFloats.filter(f => f.index === i).map(f => (
-                <span key={f.id} style={{
-                  position: "absolute",
-                  right: 4 + f.offsetX,
-                  top: -4,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: item.highlight ? "#fff" : "#5b7fa4",
-                  pointerEvents: "none",
-                  animation: "floatUp 0.8s ease-out forwards",
-                }}>+1</span>
-              ));
-              return item.link ? (
-                <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={style} onClick={() => spawnInterestFloat(i)}>{item.text}{floatSpans}</a>
-              ) : (
-                <span key={i} style={style} onClick={() => spawnInterestFloat(i)}>{item.text}{floatSpans}</span>
-              );
-            })}
-          </div>
-        </section>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+                {interests.map((item, i) => {
+                  const bg = item.highlight || "#f5f3ee";
+                  const fg = item.highlight ? "#fff" : "#555";
+                  const border = item.highlight ? "none" : "1px solid #e0ddd7";
+                  const style = {
+                    padding: "8px 16px",
+                    background: bg,
+                    color: fg,
+                    fontSize: 13,
+                    fontWeight: 400,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontStyle: "normal",
+                    letterSpacing: 0.3,
+                    border,
+                    cursor: "pointer",
+                    position: "relative",
+                    overflow: "visible",
+                    textDecoration: "none",
+                  };
+                  const floatSpans = interestFloats.filter(f => f.index === i).map(f => (
+                    <span key={f.id} style={{
+                      position: "absolute",
+                      right: 4 + f.offsetX,
+                      top: -4,
+                      fontSize: 11,
+                      fontWeight: 600,
+                      color: item.highlight ? "#fff" : "#5b7fa4",
+                      pointerEvents: "none",
+                      animation: "floatUp 0.8s ease-out forwards",
+                    }}>+1</span>
+                  ));
+                  return item.link ? (
+                    <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={style} onClick={() => spawnInterestFloat(i)}>{item.text}{floatSpans}</a>
+                  ) : (
+                    <span key={i} style={style} onClick={() => spawnInterestFloat(i)}>{item.text}{floatSpans}</span>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+        </div>
 
         <div style={{ height: 48 }} />
 
