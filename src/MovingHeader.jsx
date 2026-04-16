@@ -28,15 +28,15 @@ const HERO_PRESET = {
   groupScale: 0.2,
   octaves: 2,
   noiseSeed: 42,
-  cursorRadius: 220,
-  repulsion: 7,
+  cursorRadius: 150,
+  repulsion: 1.5,
   attractMode: false,
   springStiffness: 0.025,
   pushDamping: 0.88,
   returnDamping: 0.94,
-  forceFalloff: 2.2,
+  forceFalloff: 2.8,
   gravity: 0,
-  shockwaveForce: 14,
+  shockwaveForce: 4,
 };
 
 class PerlinNoise {
@@ -300,21 +300,23 @@ export default function MovingHeader({ style }) {
     const ro = new ResizeObserver(resize);
     ro.observe(parent);
 
-    canvas.addEventListener("mousemove", onMouseMove);
-    canvas.addEventListener("mouseleave", onMouseLeave);
-    canvas.addEventListener("click", onClick);
-    canvas.addEventListener("touchmove", onTouchMove, { passive: true });
-    canvas.addEventListener("touchend", () => (mouseOn = false));
+    const onTouchEnd = () => (mouseOn = false);
+    parent.addEventListener("mousemove", onMouseMove);
+    parent.addEventListener("mouseleave", onMouseLeave);
+    parent.addEventListener("click", onClick);
+    parent.addEventListener("touchmove", onTouchMove, { passive: true });
+    parent.addEventListener("touchend", onTouchEnd);
 
     rafId = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(rafId);
       ro.disconnect();
-      canvas.removeEventListener("mousemove", onMouseMove);
-      canvas.removeEventListener("mouseleave", onMouseLeave);
-      canvas.removeEventListener("click", onClick);
-      canvas.removeEventListener("touchmove", onTouchMove);
+      parent.removeEventListener("mousemove", onMouseMove);
+      parent.removeEventListener("mouseleave", onMouseLeave);
+      parent.removeEventListener("click", onClick);
+      parent.removeEventListener("touchmove", onTouchMove);
+      parent.removeEventListener("touchend", onTouchEnd);
     };
   }, []);
 

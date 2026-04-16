@@ -382,7 +382,7 @@ function Hero() {
               maxWidth: 360,
             }}
           >
-            Hi, I'm Matt :)
+            Hi, I'm Matthew :)
             <br /><br />
             I like to build cool things, cook for friends and family, and tinker with whatever catches my attention next.
           </p>
