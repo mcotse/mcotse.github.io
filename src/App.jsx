@@ -359,7 +359,7 @@ function Hero() {
             animationDelay: "0.25s",
           }}
         >
-          Builder,<br />mostly.
+          Part time sponge, full time builder.
         </h1>
 
         <div
