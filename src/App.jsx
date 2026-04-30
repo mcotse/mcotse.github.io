@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Agentation } from "agentation";
 import MovingHeader from "./MovingHeader.jsx";
 
@@ -21,12 +21,24 @@ const LIGHT = {
 };
 
 const TABS = [
+  { id: "home", label: "Home" },
   { id: "building", label: "Building" },
   { id: "built", label: "Built" },
   { id: "someday", label: "Someday" },
   { id: "consuming", label: "Consuming" },
   { id: "interests", label: "Interests" },
 ];
+
+const TAB_IDS = TABS.map((t) => t.id);
+
+const THEMES = {
+  home: "dark",
+  building: "light",
+  built: "dark",
+  someday: "light",
+  consuming: "light",
+  interests: "light",
+};
 
 const BUILDING = {
   "At Headway": [
@@ -45,7 +57,7 @@ const BUILDING = {
             href="https://x.com/rnaud/status/2043755080516518342"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#B8956A", textDecoration: "underline" }}
+            style={{ color: ACCENT, textDecoration: "underline" }}
           >
             Headway's own agent harness
           </a>
@@ -165,6 +177,17 @@ const INTERESTS = [
   { text: "pickles" },
 ];
 
+function readHash() {
+  if (typeof window === "undefined") return "home";
+  const h = window.location.hash.replace(/^#/, "");
+  return TAB_IDS.includes(h) ? h : "home";
+}
+
+function prefersReducedMotion() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function useIsMobile(breakpoint = 720) {
   const [m, setM] = useState(() => typeof window !== "undefined" && window.innerWidth < breakpoint);
   useEffect(() => {
@@ -175,13 +198,9 @@ function useIsMobile(breakpoint = 720) {
   return m;
 }
 
-function Nav({ scrolled, active, onJump }) {
+function Nav({ active, hidden, onJump }) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
-
-  const bg = scrolled ? "rgba(245, 242, 236, 0.88)" : "transparent";
-  const border = scrolled ? `1px solid ${LIGHT.border}` : "1px solid transparent";
-  const textColor = scrolled ? LIGHT.text : DARK.text;
 
   return (
     <>
@@ -190,60 +209,59 @@ function Nav({ scrolled, active, onJump }) {
           position: "fixed",
           top: 0, left: 0, right: 0,
           zIndex: 100,
-          background: bg,
-          backdropFilter: scrolled ? "blur(14px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
-          borderBottom: border,
-          padding: "18px clamp(20px, 5vw, 56px)",
+          background: "var(--nav-bg)",
+          backdropFilter: "blur(18px) saturate(140%)",
+          WebkitBackdropFilter: "blur(18px) saturate(140%)",
+          borderBottom: "1px solid var(--border)",
+          height: isMobile ? 56 : 64,
+          padding: "0 clamp(20px, 5vw, 56px)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          transition: "background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease",
-          color: textColor,
+          color: "var(--text)",
+          transform: hidden ? "translateY(-100%)" : "translateY(0)",
+          transition:
+            "transform 280ms cubic-bezier(0.4, 0, 0.2, 1), background-color 500ms cubic-bezier(0.4, 0, 0.2, 1), color 500ms cubic-bezier(0.4, 0, 0.2, 1), border-color 500ms cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => { onJump("home"); setOpen(false); }}
+          className="brand-link"
           style={{
             fontSize: 12,
             letterSpacing: 2.5,
             textTransform: "uppercase",
             fontWeight: 500,
-            color: "inherit",
-            transition: "color 0.2s ease",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = ACCENT)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "inherit")}
         >
           Matthew Tse
         </button>
 
-        {scrolled && !isMobile && (
+        {!isMobile && (
           <div style={{ display: "flex", gap: 32 }}>
-            {TABS.map((t) => (
+            {TABS.map((tab) => (
               <button
-                key={t.id}
-                onClick={() => onJump(t.id)}
-                className={"nav-link" + (active === t.id ? " active" : "")}
+                key={tab.id}
+                onClick={() => onJump(tab.id)}
+                className={"nav-link" + (active === tab.id ? " active" : "")}
                 style={{
                   fontSize: 11,
                   letterSpacing: 2,
                   textTransform: "uppercase",
                   fontWeight: 500,
-                  color: active === t.id ? ACCENT : LIGHT.dim,
                 }}
               >
-                {t.label}
+                {tab.label}
               </button>
             ))}
           </div>
         )}
 
-        {scrolled && isMobile && (
+        {isMobile && (
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label="Menu"
-            style={{ display: "flex", flexDirection: "column", gap: 5, padding: 4 }}
+            style={{ display: "flex", flexDirection: "column", gap: 5, padding: 4, color: "var(--text)" }}
           >
             <span style={{ width: 22, height: 1.5, background: "currentColor", transition: "transform 0.3s", transform: open ? "rotate(45deg) translate(3px,3px)" : "none" }} />
             <span style={{ width: 22, height: 1.5, background: "currentColor", transition: "opacity 0.3s", opacity: open ? 0 : 1 }} />
@@ -252,152 +270,46 @@ function Nav({ scrolled, active, onJump }) {
         )}
       </nav>
 
-      {scrolled && isMobile && (
+      {isMobile && (
         <div
           style={{
             position: "fixed",
-            top: 58, left: 0, right: 0,
+            top: 56, left: 0, right: 0,
             zIndex: 99,
-            background: "rgba(245, 242, 236, 0.97)",
-            backdropFilter: "blur(14px)",
-            WebkitBackdropFilter: "blur(14px)",
-            borderBottom: open ? `1px solid ${LIGHT.border}` : "1px solid transparent",
+            background: "var(--nav-bg)",
+            backdropFilter: "blur(18px) saturate(140%)",
+            WebkitBackdropFilter: "blur(18px) saturate(140%)",
+            borderBottom: open ? "1px solid var(--border)" : "1px solid transparent",
             overflow: "hidden",
             maxHeight: open ? 420 : 0,
-            transition: "max-height 0.35s ease, border-color 0.35s ease",
+            transform: hidden ? "translateY(-120%)" : "translateY(0)",
+            transition:
+              "max-height 0.35s ease, border-color 0.35s ease, transform 280ms cubic-bezier(0.4, 0, 0.2, 1), background-color 500ms cubic-bezier(0.4, 0, 0.2, 1)",
           }}
         >
           <div style={{ padding: "12px clamp(20px, 5vw, 56px) 20px", display: "flex", flexDirection: "column" }}>
-            {TABS.map((t) => (
+            {TABS.map((tab) => (
               <button
-                key={t.id}
-                onClick={() => { onJump(t.id); setOpen(false); }}
+                key={tab.id}
+                onClick={() => { onJump(tab.id); setOpen(false); }}
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   letterSpacing: 2,
                   textTransform: "uppercase",
                   fontWeight: 500,
-                  color: active === t.id ? ACCENT : LIGHT.dim,
-                  padding: "14px 0",
+                  color: active === tab.id ? ACCENT : "var(--dim)",
+                  padding: "14px 0 14px 12px",
                   textAlign: "left",
-                  borderLeft: active === t.id ? `2px solid ${ACCENT}` : "2px solid transparent",
-                  paddingLeft: 12,
+                  borderLeft: active === tab.id ? `2px solid ${ACCENT}` : "2px solid transparent",
                 }}
               >
-                {t.label}
+                {tab.label}
               </button>
             ))}
           </div>
         </div>
       )}
     </>
-  );
-}
-
-function Hero() {
-  return (
-    <section
-      id="hero"
-      style={{
-        position: "relative",
-        height: "100vh",
-        minHeight: 640,
-        background: DARK.bg,
-        color: DARK.text,
-        overflow: "hidden",
-      }}
-    >
-      <MovingHeader />
-
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(180deg, rgba(15,13,11,0.1) 0%, rgba(15,13,11,0.35) 55%, rgba(15,13,11,0.75) 100%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div
-        style={{
-          position: "relative",
-          height: "100%",
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "0 clamp(20px, 5vw, 56px)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          paddingBottom: "clamp(48px, 10vh, 96px)",
-        }}
-      >
-        <div
-          className="rise-in"
-          style={{
-            fontSize: 11,
-            letterSpacing: 3,
-            textTransform: "uppercase",
-            color: ACCENT,
-            fontWeight: 500,
-            marginBottom: 28,
-            animationDelay: "0.1s",
-          }}
-        >
-          Matthew Tse — 2026
-        </div>
-
-        <h1
-          className="rise-in"
-          style={{
-            fontSize: "clamp(44px, 9vw, 112px)",
-            fontWeight: 500,
-            margin: 0,
-            lineHeight: 0.98,
-            letterSpacing: "-0.03em",
-            color: DARK.text,
-            maxWidth: 960,
-            animationDelay: "0.25s",
-          }}
-        >
-          Part time sponge, full time builder.
-        </h1>
-
-        <div
-          className="rise-in"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.4fr)",
-            gap: "clamp(24px, 5vw, 72px)",
-            marginTop: "clamp(40px, 8vh, 72px)",
-            animationDelay: "0.7s",
-            alignItems: "start",
-          }}
-        >
-          <p
-            style={{
-              fontSize: 15,
-              lineHeight: 1.75,
-              color: DARK.dim,
-              fontWeight: 300,
-              maxWidth: 360,
-            }}
-          >
-            Hi, I'm Matthew :)
-            <br /><br />
-            I like to build cool things, cook for friends and family, and tinker with whatever catches my attention next.
-          </p>
-
-          <InfoTable
-            rows={[
-              ["Role", "Engineering @ Headway"],
-              ["Focus", "Family, friends, food, and then maybe agents"],
-              ["Makes", "Apps, kombucha, dinners, 3d prints"],
-            ]}
-            theme={DARK}
-          />
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -443,25 +355,115 @@ function InfoTable({ rows, theme }) {
   );
 }
 
-function SectionHeader({ eyebrow, title, theme }) {
+function HomeContent() {
   return (
-    <div style={{ marginBottom: 56 }}>
-      <div
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <section
         style={{
-          fontSize: 10,
-          letterSpacing: 3,
-          textTransform: "uppercase",
-          color: ACCENT,
-          fontWeight: 500,
-          marginBottom: 18,
+          position: "relative",
+          flex: 1,
+          minHeight: 540,
+          color: DARK.text,
+          overflow: "hidden",
           display: "flex",
-          alignItems: "center",
-          gap: 12,
+          flexDirection: "column",
         }}
       >
-        <span style={{ width: 24, height: 1, background: ACCENT }} />
-        {eyebrow}
-      </div>
+        <MovingHeader />
+
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(180deg, rgba(15,13,11,0.1) 0%, rgba(15,13,11,0.35) 55%, rgba(15,13,11,0.75) 100%)",
+            pointerEvents: "none",
+          }}
+        />
+
+        <div
+          style={{
+            position: "relative",
+            flex: 1,
+            width: "100%",
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 clamp(20px, 5vw, 56px)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            paddingBottom: "clamp(48px, 10vh, 96px)",
+          }}
+        >
+          <h1
+            className="rise-in"
+            style={{
+              fontSize: "clamp(35px, 7.2vw, 90px)",
+              fontWeight: 500,
+              margin: 0,
+              lineHeight: 0.98,
+              letterSpacing: "-0.03em",
+              color: DARK.text,
+              maxWidth: 960,
+              animationDelay: "0.25s",
+            }}
+          >
+            Part time sponge, full time tinkerer.
+          </h1>
+
+          <div
+            className="rise-in"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.4fr)",
+              gap: "clamp(24px, 5vw, 72px)",
+              marginTop: "clamp(40px, 8vh, 72px)",
+              animationDelay: "0.7s",
+              alignItems: "start",
+            }}
+          >
+            <p
+              style={{
+                fontSize: 15,
+                lineHeight: 1.75,
+                color: DARK.dim,
+                fontWeight: 300,
+                maxWidth: 360,
+              }}
+            >
+              Hi, I'm Matthew :)
+              <br /><br />
+              I like to build cool things, cook for friends and family, and tinker with whatever catches my attention next.
+            </p>
+
+            <InfoTable
+              rows={[
+                ["Role", "Engineering @ Headway"],
+                ["Focus", "Family, friends, food, and then maybe agents"],
+                ["Makes", "Apps, kombucha, dinners, 3d prints"],
+              ]}
+              theme={DARK}
+            />
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+function SectionHeader({ title }) {
+  return (
+    <div style={{ marginBottom: 56 }}>
+      <span
+        style={{
+          display: "block",
+          width: 24,
+          height: 1,
+          background: ACCENT,
+          marginBottom: 24,
+        }}
+      />
       <h2
         style={{
           fontSize: "clamp(36px, 5.5vw, 64px)",
@@ -469,8 +471,9 @@ function SectionHeader({ eyebrow, title, theme }) {
           margin: 0,
           lineHeight: 1.02,
           letterSpacing: "-0.02em",
-          color: theme.text,
+          color: "var(--text)",
           textTransform: "uppercase",
+          whiteSpace: "pre-line",
         }}
       >
         {title}
@@ -479,7 +482,24 @@ function SectionHeader({ eyebrow, title, theme }) {
   );
 }
 
-function ProjectRow({ p, theme, last }) {
+function ContentTab({ title, children }) {
+  return (
+    <section
+      style={{
+        padding: "clamp(120px, 18vh, 200px) clamp(20px, 5vw, 56px) clamp(96px, 14vh, 160px)",
+        color: "var(--text)",
+        minHeight: "100vh",
+      }}
+    >
+      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <SectionHeader title={title} />
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function ProjectRow({ p, last }) {
   const isMobile = useIsMobile(820);
   return (
     <div
@@ -488,7 +508,7 @@ function ProjectRow({ p, theme, last }) {
         gridTemplateColumns: isMobile ? "1fr" : "minmax(180px, 1fr) minmax(220px, 1fr) minmax(0, 2fr)",
         gap: isMobile ? 10 : 40,
         padding: isMobile ? "24px 0" : "28px 0",
-        borderBottom: last ? "none" : `1px solid ${theme.border}`,
+        borderBottom: last ? "none" : "1px solid var(--border)",
         alignItems: "baseline",
       }}
     >
@@ -498,7 +518,7 @@ function ProjectRow({ p, theme, last }) {
           letterSpacing: "-0.01em",
           textTransform: "uppercase",
           fontWeight: 500,
-          color: theme.text,
+          color: "var(--text)",
         }}
       >
         {p.title}
@@ -506,7 +526,7 @@ function ProjectRow({ p, theme, last }) {
       <div
         style={{
           fontSize: 12,
-          color: theme.dim,
+          color: "var(--dim)",
           letterSpacing: 1.2,
           textTransform: "uppercase",
           fontWeight: 400,
@@ -517,7 +537,7 @@ function ProjectRow({ p, theme, last }) {
       <div
         style={{
           fontSize: 14,
-          color: theme.dim,
+          color: "var(--dim)",
           lineHeight: 1.7,
           fontWeight: 300,
           maxWidth: 540,
@@ -529,7 +549,7 @@ function ProjectRow({ p, theme, last }) {
   );
 }
 
-function SubGroup({ label, items, theme }) {
+function SubGroup({ label, items }) {
   return (
     <div style={{ marginBottom: 56 }}>
       <div
@@ -537,249 +557,134 @@ function SubGroup({ label, items, theme }) {
           fontSize: 10,
           letterSpacing: 2.5,
           textTransform: "uppercase",
-          color: theme.muted,
+          color: "var(--muted)",
           fontWeight: 500,
           marginBottom: 12,
           paddingBottom: 10,
-          borderBottom: `1px solid ${theme.border}`,
+          borderBottom: "1px solid var(--border)",
         }}
       >
         {label}
       </div>
       {items.map((p, i) => (
-        <ProjectRow key={p.title} p={p} theme={theme} last={i === items.length - 1} />
+        <ProjectRow key={p.title} p={p} last={i === items.length - 1} />
       ))}
     </div>
   );
 }
 
-function ProjectsSection({ id, eyebrow, title, groups, theme }) {
+function ProjectsTab({ title, groups }) {
   return (
-    <Section id={id} theme={theme}>
-      <SectionHeader eyebrow={eyebrow} title={title} theme={theme} />
+    <ContentTab title={title}>
       {Object.entries(groups).map(([group, items]) => (
-        <SubGroup key={group} label={group} items={items} theme={theme} />
+        <SubGroup key={group} label={group} items={items} />
       ))}
-    </Section>
+    </ContentTab>
   );
 }
 
-function Section({ id, theme, children }) {
+function SomedayTab() {
   return (
-    <section
-      id={id}
-      style={{
-        background: theme.bg,
-        color: theme.text,
-        padding: "clamp(96px, 14vh, 160px) clamp(20px, 5vw, 56px)",
-      }}
-    >
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>{children}</div>
-    </section>
-  );
-}
-
-function SomedaySection() {
-  const [expanded, setExpanded] = useState(false);
-  const visible = expanded ? SOMEDAY : SOMEDAY.slice(0, 5);
-  const hasMore = SOMEDAY.length > 5;
-
-  return (
-    <Section id="someday" theme={LIGHT}>
-      <SectionHeader eyebrow="Someday" title="What I want to build" theme={LIGHT} />
-      <div style={{ position: "relative" }}>
-        <ol
-          style={{
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
-            borderTop: `1px solid ${LIGHT.border}`,
-          }}
-        >
-          {visible.map((item, i) => (
-            <li
-              key={i}
+    <ContentTab title={"What I want\nto build"}>
+      <ol
+        style={{
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+          borderTop: "1px solid var(--border)",
+        }}
+      >
+        {SOMEDAY.map((item, i) => (
+          <li
+            key={i}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "60px 1fr",
+              padding: "22px 0",
+              borderBottom: "1px solid var(--border)",
+              alignItems: "baseline",
+              gap: 16,
+            }}
+          >
+            <span
               style={{
-                display: "grid",
-                gridTemplateColumns: "60px 1fr",
-                padding: "22px 0",
-                borderBottom: `1px solid ${LIGHT.border}`,
-                alignItems: "baseline",
-                gap: 16,
+                fontSize: 11,
+                letterSpacing: 2,
+                color: ACCENT,
+                fontWeight: 500,
               }}
             >
-              <span
-                style={{
-                  fontSize: 11,
-                  letterSpacing: 2,
-                  color: ACCENT,
-                  fontWeight: 500,
-                }}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span
-                style={{
-                  fontSize: 16,
-                  color: LIGHT.text,
-                  fontWeight: 400,
-                  lineHeight: 1.55,
-                }}
-              >
-                {item}
-              </span>
-            </li>
-          ))}
-        </ol>
-        {hasMore && !expanded && (
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: 140,
-              background: `linear-gradient(180deg, rgba(245, 242, 236, 0) 0%, ${LIGHT.bg} 85%)`,
-              pointerEvents: "none",
-            }}
-          />
-        )}
-      </div>
-      {hasMore && (
-        <div style={{ marginTop: 20, display: "flex", justifyContent: "center" }}>
-          <button
-            onClick={() => setExpanded((e) => !e)}
-            style={{
-              fontSize: 11,
-              letterSpacing: 2.5,
-              textTransform: "uppercase",
-              fontWeight: 500,
-              color: ACCENT,
-              padding: "12px 20px",
-              border: `1px solid ${ACCENT}`,
-              background: "transparent",
-              cursor: "pointer",
-              transition: "background 0.2s ease, color 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = ACCENT;
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = ACCENT;
-            }}
-          >
-            {expanded ? "Show less" : `Show ${SOMEDAY.length - 5} more`}
-          </button>
-        </div>
-      )}
-    </Section>
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span
+              style={{
+                fontSize: 16,
+                color: "var(--text)",
+                fontWeight: 400,
+                lineHeight: 1.55,
+              }}
+            >
+              {item}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </ContentTab>
   );
 }
 
-function ConsumingSection() {
-  const [expanded, setExpanded] = useState(false);
-  const visible = expanded ? CONSUMING : CONSUMING.slice(0, 5);
-  const hasMore = CONSUMING.length > 5;
-
+function ConsumingTab() {
   return (
-    <Section id="consuming" theme={LIGHT}>
-      <SectionHeader eyebrow="Consuming" title="How I spend my time rotting" theme={LIGHT} />
-      <div style={{ position: "relative" }}>
-        <div style={{ borderTop: `1px solid ${LIGHT.border}` }}>
-          {visible.map((item, i) => {
-            const inner = (
-              <>
-                <span style={{ fontSize: 15, color: LIGHT.text, fontWeight: 400 }}>{item.title}</span>
-                {item.author && (
-                  <span style={{ fontSize: 13, color: LIGHT.dim, fontWeight: 300, marginLeft: 10 }}>
-                    — {item.author}
-                  </span>
-                )}
-                {item.link && (
-                  <span style={{ marginLeft: 10, color: LIGHT.muted, fontSize: 13 }}>↗</span>
-                )}
-              </>
-            );
-            const base = {
-              display: "block",
-              padding: "16px 0",
-              borderBottom: `1px solid ${LIGHT.border}`,
-              color: LIGHT.text,
-            };
-            return item.link ? (
-              <a
-                key={i}
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="row-link"
-                style={base}
-              >
-                {inner}
-              </a>
-            ) : (
-              <div key={i} style={base}>
-                {inner}
-              </div>
-            );
-          })}
-        </div>
-        {hasMore && !expanded && (
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: 140,
-              background: `linear-gradient(180deg, rgba(245, 242, 236, 0) 0%, ${LIGHT.bg} 85%)`,
-              pointerEvents: "none",
-            }}
-          />
-        )}
+    <ContentTab title={"How I spend\nmy time rotting"}>
+      <div style={{ borderTop: "1px solid var(--border)" }}>
+        {CONSUMING.map((item, i) => {
+          const inner = (
+            <>
+              <span style={{ fontSize: 15, color: "var(--text)", fontWeight: 400 }}>{item.title}</span>
+              {item.author && (
+                <span style={{ fontSize: 13, color: "var(--dim)", fontWeight: 300, marginLeft: 10 }}>
+                  — {item.author}
+                </span>
+              )}
+              {item.link && (
+                <span style={{ marginLeft: 10, color: "var(--muted)", fontSize: 13 }}>↗</span>
+              )}
+            </>
+          );
+          const base = {
+            display: "block",
+            padding: "16px 0",
+            borderBottom: "1px solid var(--border)",
+            color: "var(--text)",
+          };
+          return item.link ? (
+            <a
+              key={i}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="row-link"
+              style={base}
+            >
+              {inner}
+            </a>
+          ) : (
+            <div key={i} style={base}>
+              {inner}
+            </div>
+          );
+        })}
       </div>
-      {hasMore && (
-        <div style={{ marginTop: 20, display: "flex", justifyContent: "center" }}>
-          <button
-            onClick={() => setExpanded((e) => !e)}
-            style={{
-              fontSize: 11,
-              letterSpacing: 2.5,
-              textTransform: "uppercase",
-              fontWeight: 500,
-              color: ACCENT,
-              padding: "12px 20px",
-              border: `1px solid ${ACCENT}`,
-              background: "transparent",
-              cursor: "pointer",
-              transition: "background 0.2s ease, color 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = ACCENT;
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = ACCENT;
-            }}
-          >
-            {expanded ? "Show less" : `Show ${CONSUMING.length - 5} more`}
-          </button>
-        </div>
-      )}
-    </Section>
+    </ContentTab>
   );
 }
 
-function InterestsSection() {
+function InterestsTab() {
   const isMobile = useIsMobile(720);
   const cols = isMobile ? 2 : 4;
 
   return (
-    <Section id="interests" theme={LIGHT}>
-      <SectionHeader eyebrow="Interests" title="Things I adore" theme={LIGHT} />
+    <ContentTab title={"Things I adore"}>
       <div
         style={{
           display: "grid",
@@ -795,9 +700,9 @@ function InterestsSection() {
             letterSpacing: 0.2,
             textAlign: "center",
             cursor: t.link ? "pointer" : "default",
-            border: `1px solid ${LIGHT.border}`,
+            border: "1px solid var(--border)",
             background: "transparent",
-            color: LIGHT.text,
+            color: "var(--text)",
             textDecoration: "none",
             display: "block",
           };
@@ -813,7 +718,7 @@ function InterestsSection() {
           );
         })}
       </div>
-    </Section>
+    </ContentTab>
   );
 }
 
@@ -885,63 +790,123 @@ function Footer() {
   );
 }
 
-export default function App() {
-  const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState("building");
+function renderTabContent(id) {
+  switch (id) {
+    case "home": return <HomeContent />;
+    case "building": return <ProjectsTab title={"What I'm\nbuilding"} groups={BUILDING} />;
+    case "built": return <ProjectsTab title={"What I've\nbuilt"} groups={BUILT} />;
+    case "someday": return <SomedayTab />;
+    case "consuming": return <ConsumingTab />;
+    case "interests": return <InterestsTab />;
+    default: return null;
+  }
+}
 
+export default function App() {
+  const [active, setActive] = useState(readHash);
+  const [displayed, setDisplayed] = useState(active);
+  const [phase, setPhase] = useState("entered");
+  const [navHidden, setNavHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  // Sync html data-theme for CSS-variable cross-fade
+  useEffect(() => {
+    document.documentElement.dataset.theme = THEMES[active];
+  }, [active]);
+
+  // hashchange listener (browser back/forward)
+  useEffect(() => {
+    const onHash = () => {
+      const next = readHash();
+      setActive((cur) => (cur === next ? cur : next));
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  // Coordinate panel exit/enter + scroll reset
+  useEffect(() => {
+    if (active === displayed) return;
+    const reduced = prefersReducedMotion();
+
+    if (reduced) {
+      const t = setTimeout(() => {
+        setDisplayed(active);
+        setPhase("entered");
+        setNavHidden(false);
+        window.scrollTo({ top: 0, behavior: "auto" });
+        lastScrollY.current = 0;
+      }, 0);
+      return () => clearTimeout(t);
+    }
+
+    const t0 = setTimeout(() => setPhase("exiting"), 0);
+    const t1 = setTimeout(() => {
+      setDisplayed(active);
+      setPhase("entering");
+      setNavHidden(false);
+      window.scrollTo({ top: 0, behavior: "auto" });
+      lastScrollY.current = 0;
+    }, 200);
+    const t2 = setTimeout(() => setPhase("entered"), 600);
+    return () => {
+      clearTimeout(t0);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [active, displayed]);
+
+  // Sticky-with-hide nav
   useEffect(() => {
     const onScroll = () => {
-      const heroHeight = window.innerHeight * 0.85;
-      setScrolled(window.scrollY > heroHeight);
-
-      let current = "building";
-      let bestTop = -Infinity;
-      for (const t of TABS) {
-        const el = document.getElementById(t.id);
-        if (!el) continue;
-        const top = el.getBoundingClientRect().top;
-        if (top <= 120 && top > bestTop) {
-          bestTop = top;
-          current = t.id;
-        }
-      }
-      setActive(current);
+      const y = window.scrollY;
+      const last = lastScrollY.current;
+      if (y > 80 && y > last) setNavHidden(true);
+      else if (y < last) setNavHidden(false);
+      lastScrollY.current = y;
     };
-    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const jumpTo = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.scrollY - 60;
-    window.scrollTo({ top: y, behavior: "smooth" });
+  const onJump = (id) => {
+    if (!TAB_IDS.includes(id)) return;
+    setNavHidden(false);
+    if (id === active) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
+    if (window.location.hash !== "#" + id) {
+      window.location.hash = id;
+    } else {
+      setActive(id);
+    }
   };
 
+  const homeVisible = displayed === "home";
+
   return (
-    <div style={{ background: LIGHT.bg }}>
-      <Nav scrolled={scrolled} active={active} onJump={jumpTo} />
-      <Hero />
-      <ProjectsSection
-        id="building"
-        eyebrow="Building"
-        title="What I'm building"
-        groups={BUILDING}
-        theme={LIGHT}
-      />
-      <ProjectsSection
-        id="built"
-        eyebrow="Built"
-        title="What I've built"
-        groups={BUILT}
-        theme={DARK}
-      />
-      <SomedaySection />
-      <ConsumingSection />
-      <InterestsSection />
-      <Footer />
+    <>
+      <Nav active={active} hidden={navHidden} onJump={onJump} />
+
+      <main>
+        {/* Home is always mounted so MovingHeader keeps running */}
+        <div
+          className={homeVisible ? `panel-${phase}` : ""}
+          style={{ display: homeVisible ? "block" : "none" }}
+        >
+          <HomeContent />
+        </div>
+
+        {/* Other tabs render only when active */}
+        {!homeVisible && (
+          <div className={`panel-${phase}`}>
+            {renderTabContent(displayed)}
+          </div>
+        )}
+      </main>
+
       {import.meta.env.DEV && <Agentation />}
-    </div>
+    </>
   );
 }
