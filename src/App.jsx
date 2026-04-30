@@ -314,6 +314,7 @@ function Nav({ active, hidden, onJump }) {
 }
 
 function InfoTable({ rows, theme }) {
+  const isMobile = useIsMobile();
   return (
     <div style={{ borderTop: `1px solid ${theme.border}` }}>
       {rows.map(([k, v]) => (
@@ -321,10 +322,10 @@ function InfoTable({ rows, theme }) {
           key={k}
           style={{
             display: "grid",
-            gridTemplateColumns: "100px 1fr",
+            gridTemplateColumns: isMobile ? "72px 1fr" : "100px 1fr",
             padding: "14px 0",
             borderBottom: `1px solid ${theme.border}`,
-            gap: 20,
+            gap: isMobile ? 16 : 20,
             alignItems: "baseline",
           }}
         >
@@ -356,6 +357,7 @@ function InfoTable({ rows, theme }) {
 }
 
 function HomeContent() {
+  const isMobile = useIsMobile();
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <section
@@ -414,8 +416,10 @@ function HomeContent() {
             className="rise-in"
             style={{
               display: "grid",
-              gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.4fr)",
-              gap: "clamp(24px, 5vw, 72px)",
+              gridTemplateColumns: isMobile
+                ? "1fr"
+                : "minmax(0, 1fr) minmax(0, 1.4fr)",
+              gap: isMobile ? 32 : "clamp(24px, 5vw, 72px)",
               marginTop: "clamp(40px, 8vh, 72px)",
               animationDelay: "0.7s",
               alignItems: "start",
